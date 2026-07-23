@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Minor, Kofaktor & Adjoint 3D</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandSky: '#38bdf8',
+                        brandBlue: '#0284c7',
+                        brandDarkBlue: '#1e3a8a',
+                        brandYellow: '#facc15',
+                        brandGreen: '#10b981',
+                        brandPurple: '#8b5cf6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fredoka', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
+    <!-- KaTeX Math Renderer -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 45%, #0369a1 100%);
+            min-height: 100vh;
+            color: #0f172a;
+        }
+
+        /* 3D Extruded Text Effect (Poster Style) */
+        .text-3d-yellow {
+            color: #facc15;
+            text-shadow: 
+                2px 2px 0px #b45309,
+                4px 4px 0px #78350f,
+                6px 6px 10px rgba(0, 0, 0, 0.4);
+        }
+        
+        .text-3d-white {
+            color: #ffffff;
+            text-shadow: 
+                2px 2px 0px #1e3a8a,
+                4px 4px 0px #0f172a,
+                6px 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Poster Style Section Containers */
+        .poster-card-purple {
+            background: #fefce8;
+            border: 4px solid #a855f7;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #7e22ce, 0 18px 30px rgba(0,0,0,0.3);
+        }
+
+        .poster-card-emerald {
+            background: #fefce8;
+            border: 4px solid #10b981;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #047857, 0 18px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Poster Header Bars */
+        .poster-header-purple {
+            background: linear-gradient(180deg, #9333ea 0%, #7e22ce 100%);
+            border-bottom: 4px solid #581c87;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .poster-header-emerald {
+            background: linear-gradient(180deg, #059669 0%, #047857 100%);
+            border-bottom: 4px solid #064e3b;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        /* 3D Glossy Buttons */
+        .btn-3d-blue {
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            border-bottom: 4px solid #0369a1;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-blue:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        /* 3D Matrix Brackets */
+        .matrix-bracket {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding: 4px 8px;
+        }
+
+        .matrix-bracket::before, .matrix-bracket::after {
+            content: "";
+            position: absolute;
+            top: -3px;
+            bottom: -3px;
+            width: 10px;
+            border: 3px solid #1d4ed8;
+        }
+
+        .matrix-bracket::before {
+            left: 0;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .matrix-bracket::after {
+            right: 0;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .matrix-bracket-purple::before, .matrix-bracket-purple::after {
+            border-color: #7e22ce;
+        }
+
+        .matrix-bracket-emerald::before, .matrix-bracket-emerald::after {
+            border-color: #047857;
+        }
+
+        /* Matrix Grid & Cells */
+        .matrix-grid {
+            display: grid;
+            gap: 6px;
+        }
+
+        .g-2x2 { grid-template-columns: repeat(2, 46px); grid-template-rows: repeat(2, 42px); }
+        .g-3x3 { grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 40px); }
+
+        /* Input Cell Styling (Yellow Background) */
+        .matrix-grid input, .matrix-input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background-color: #ffff00;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #000;
+            box-sizing: border-box;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+            transition: all 0.15s ease;
+        }
+
+        .matrix-grid input:focus, .matrix-input:focus {
+            background-color: #ffffff;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Display Cells */
+        .matrix-cell-white {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #1e3a8a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            padding: 0 4px;
+            min-width: 44px;
+            min-height: 40px;
+        }
+
+        .matrix-cell-green {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #dcfce7;
+            border: 2px solid #166534;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #15803d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            padding: 0 4px;
+            min-width: 44px;
+            min-height: 40px;
+        }
+
+        /* Hide Number Spinner Arrows */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Boxed Calculation Displays */
+        .box-calc {
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 4px 8px;
+            background-color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 65px;
+            font-weight: 800;
+            font-size: 13px;
+            color: #1e3a8a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .box-calc-wide {
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 4px 10px;
+            background-color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 85px;
+            font-weight: 800;
+            font-size: 13px;
+            color: #1e3a8a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        /* Label Tag */
+        .label-tag {
+            background: linear-gradient(135deg, #7e22ce, #9333ea);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 6px 14px;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        .label-tag-emerald {
+            background: linear-gradient(135deg, #047857, #10b981);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 6px 14px;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
+
+    <header class="max-w-6xl mx-auto pt-6 px-4">
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
+            <!-- Background Star -->
+            <div class="absolute -top-3 -right-3 text-yellow-400 text-3xl opacity-30 pointer-events-none">
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+            <!-- Left Branding -->
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-gradient-to-tr from-purple-700 via-purple-500 to-indigo-400 rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                    [MCA]
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="bg-gradient-to-r from-red-600 to-rose-500 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow-sm tracking-widest uppercase">
+                            MODUL SESI 2026/2027
+                        </span>
+                        <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-purple-300 flex items-center gap-1">
+                            <i class="fa-solid fa-calculator text-purple-800"></i> Topik 4
+                        </span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight leading-tight font-display">
+                        HUB PEMBELAJARAN & KALKULATOR MATRIKS 3D
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Navigation Button -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group"></i> 6 Modul Topik
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-6">
+        <!-- Banner Section -->
+        <section class="relative bg-gradient-to-b from-purple-500 via-indigo-600 to-purple-800 rounded-3xl p-6 sm:p-8 border-4 border-white shadow-2xl overflow-hidden mb-8 text-center">
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <div class="inline-block bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-black text-xs sm:text-sm px-6 py-1 rounded-full border-2 border-white shadow-lg mb-3 tracking-widest uppercase">
+                    MODUL KALKULATOR LIVE
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-black font-display tracking-wide mb-2 text-3d-yellow uppercase">
+                    MINOR, COFACTOR & ADJOINT
+                </h2>
+                <h3 class="text-lg sm:text-xl font-black font-display text-3d-white uppercase mb-4">
+                    (2x2 & 3x3)
+                </h3>
+                <p class="text-white text-xs sm:text-sm font-semibold leading-relaxed bg-purple-950/40 p-3.5 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
+                    Masukkan nombor pada petak <span class="bg-yellow-300 text-slate-900 font-extrabold px-1.5 py-0.5 rounded">kuning</span> di bawah. Nilai **Minor**, **Kofaktor**, dan **Adjoint** akan dihitung dan dikemaskini secara **langsung (*live*)**!
+                </p>
+            </div>
+        </section>
+
+        <!-- SEKSYEN 1: MATRIKS 2x2 -->
+        <section class="poster-card-purple p-4 sm:p-6 mb-8">
+            <div class="poster-header-purple p-3.5 rounded-2xl text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
+                    1
+                </div>
+                <div>
+                    <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
+                        MINOR, COFACTOR & ADJOINT FOR : (2x2)
+                    </h3>
+                    <p class="text-[11px] text-purple-100 font-semibold" id="katex_f2">Formula: $\text{Adj}(A) = (\text{Cofactor}(A))^T$</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 overflow-x-auto pb-4">
+                <!-- Step 1: Input Matrix A 2x2 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
+                    <div class="label-tag inline-block mb-4">LANGKAH 1: MATRIKS A</div>
+                    <div class="flex items-center gap-4 text-sm font-bold text-slate-800">
+                        <span class="text-base font-serif italic text-purple-900 font-black">A</span>
+                        <span class="text-lg font-black">=</span>
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <input type="number" id="m2_00" value="9" oninput="calc2x2()">
+                                <input type="number" id="m2_01" value="2" oninput="calc2x2()">
+                                <input type="number" id="m2_10" value="10" oninput="calc2x2()">
+                                <input type="number" id="m2_11" value="-2" oninput="calc2x2()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Minor A 2x2 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
+                    <div class="label-tag inline-block mb-4">LANGKAH 2: MINOR A</div>
+                    <div class="flex items-center gap-4 text-sm font-bold text-slate-800">
+                        <span class="text-purple-900 font-black">Minor A =</span>
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="min2_00">-2</div>
+                                <div class="matrix-cell-white" id="min2_01">10</div>
+                                <div class="matrix-cell-white" id="min2_10">2</div>
+                                <div class="matrix-cell-white" id="min2_11">9</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Cofactor A 2x2 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
+                    <div class="label-tag inline-block mb-4">LANGKAH 3: COFACTOR A</div>
+                    
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800 mb-4 bg-purple-50 p-3.5 rounded-xl border border-purple-200">
+                        <span class="text-purple-900 font-black">COFACTOR A =</span>
+                        <span class="text-slate-600 font-bold">MINOR A</span>
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-green">+</div>
+                                <div class="matrix-cell-green">-</div>
+                                <div class="matrix-cell-green">-</div>
+                                <div class="matrix-cell-green">+</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-slate-800">
+                        <span class="text-purple-900 font-black">COFACTOR A =</span>
+                        
+                        <!-- Minor Values -->
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="cof2_m00">-2</div>
+                                <div class="matrix-cell-white" id="cof2_m01">10</div>
+                                <div class="matrix-cell-white" id="cof2_m10">2</div>
+                                <div class="matrix-cell-white" id="cof2_m11">9</div>
+                            </div>
+                        </div>
+
+                        <!-- Sign Matrix -->
+                        <div class="matrix-bracket matrix-bracket-emerald">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-green">+1</div>
+                                <div class="matrix-cell-green">-1</div>
+                                <div class="matrix-cell-green">-1</div>
+                                <div class="matrix-cell-green">+1</div>
+                            </div>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <!-- Step calc boxes -->
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2" style="grid-template-columns: repeat(2, 85px);">
+                                <div class="box-calc" id="step2_00">-2 x +1</div>
+                                <div class="box-calc" id="step2_01">10 x -1</div>
+                                <div class="box-calc" id="step2_10">2 x -1</div>
+                                <div class="box-calc" id="step2_11">9 x +1</div>
+                            </div>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <!-- Final Cofactor Matrix -->
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="res2_00">-2</div>
+                                <div class="matrix-cell-white" id="res2_01">-10</div>
+                                <div class="matrix-cell-white" id="res2_10">-2</div>
+                                <div class="matrix-cell-white" id="res2_11">9</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Adjoint A 2x2 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
+                    <div class="label-tag inline-block mb-4">LANGKAH 4: ADJOIN A = (COFACTOR A)<sup>T</sup></div>
+                    <div class="flex flex-wrap items-center gap-4 text-sm font-bold text-slate-800">
+                        <span class="text-purple-900 font-black">ADJOIN A =</span>
+                        <div class="relative inline-flex items-start">
+                            <div class="matrix-bracket matrix-bracket-purple">
+                                <div class="matrix-grid g-2x2">
+                                    <div class="matrix-cell-white" id="adj2_t00">-2</div>
+                                    <div class="matrix-cell-white" id="adj2_t01">-10</div>
+                                    <div class="matrix-cell-white" id="adj2_t10">-2</div>
+                                    <div class="matrix-cell-white" id="adj2_t11">9</div>
+                                </div>
+                            </div>
+                            <span class="text-xs font-black text-purple-700 ml-0.5 -mt-1">T</span>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <div class="matrix-bracket matrix-bracket-purple bg-purple-100/50 p-1 rounded-xl">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white bg-purple-200 border-purple-800 text-purple-900" id="adj2_f00">-2</div>
+                                <div class="matrix-cell-white bg-purple-200 border-purple-800 text-purple-900" id="adj2_f01">-2</div>
+                                <div class="matrix-cell-white bg-purple-200 border-purple-800 text-purple-900" id="adj2_f10">-10</div>
+                                <div class="matrix-cell-white bg-purple-200 border-purple-800 text-purple-900" id="adj2_f11">9</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKSYEN 2: MATRIKS 3x3 -->
+        <section class="poster-card-emerald p-4 sm:p-6 mb-8">
+            <div class="poster-header-emerald p-3.5 rounded-2xl text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
+                    2
+                </div>
+                <div>
+                    <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
+                        MINOR, COFACTOR & ADJOINT FOR : (3x3)
+                    </h3>
+                    <p class="text-[11px] text-emerald-100 font-semibold" id="katex_f3">Formula 3x3 Expansion & Transpose</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 overflow-x-auto pb-4">
+                <!-- Input Matrix A 3x3 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
+                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 1: MATRIKS A (3x3)</div>
+                    <div class="flex items-center gap-4 text-sm font-bold text-slate-800">
+                        <span class="text-base font-serif italic text-emerald-900 font-black">A</span>
+                        <span class="text-lg font-black">=</span>
+                        <div class="matrix-bracket matrix-bracket-emerald">
+                            <div class="matrix-grid g-3x3">
+                                <input type="number" id="m3_00" value="5" oninput="calc3x3()">
+                                <input type="number" id="m3_01" value="-2" oninput="calc3x3()">
+                                <input type="number" id="m3_02" value="3" oninput="calc3x3()">
+
+                                <input type="number" id="m3_10" value="2" oninput="calc3x3()">
+                                <input type="number" id="m3_11" value="5" oninput="calc3x3()">
+                                <input type="number" id="m3_12" value="4" oninput="calc3x3()">
+
+                                <input type="number" id="m3_20" value="-3" oninput="calc3x3()">
+                                <input type="number" id="m3_21" value="4" oninput="calc3x3()">
+                                <input type="number" id="m3_22" value="7" oninput="calc3x3()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Minor A 3x3 Expansion -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
+                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 2: MINOR A (PEMECAHAN 9 SUB-MATRIKS 2x2)</div>
+                    
+                    <!-- Sub-matrices grid -->
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800 mb-6 bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                        <span class="text-emerald-900 font-black">Minor A =</span>
+                        <div class="matrix-bracket matrix-bracket-emerald bg-white p-2 rounded-xl">
+                            <div class="grid grid-cols-3 gap-3">
+                                <!-- Row 0 -->
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_00_11">5</div><div class="matrix-cell-white" id="sub_00_12">4</div>
+                                        <div class="matrix-cell-white" id="sub_00_21">4</div><div class="matrix-cell-white" id="sub_00_22">7</div>
+                                    </div>
+                                </div>
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_01_10">2</div><div class="matrix-cell-white" id="sub_01_12">4</div>
+                                        <div class="matrix-cell-white" id="sub_01_20">-3</div><div class="matrix-cell-white" id="sub_01_22">7</div>
+                                    </div>
+                                </div>
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_02_10">2</div><div class="matrix-cell-white" id="sub_02_11">5</div>
+                                        <div class="matrix-cell-white" id="sub_02_20">-3</div><div class="matrix-cell-white" id="sub_02_21">4</div>
+                                    </div>
+                                </div>
+
+                                <!-- Row 1 -->
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_10_01">-2</div><div class="matrix-cell-white" id="sub_10_02">3</div>
+                                        <div class="matrix-cell-white" id="sub_10_21">4</div><div class="matrix-cell-white" id="sub_10_22">7</div>
+                                    </div>
+                                </div>
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_11_00">5</div><div class="matrix-cell-white" id="sub_11_02">3</div>
+                                        <div class="matrix-cell-white" id="sub_11_20">-3</div><div class="matrix-cell-white" id="sub_11_22">7</div>
+                                    </div>
+                                </div>
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_12_00">5</div><div class="matrix-cell-white" id="sub_12_01">-2</div>
+                                        <div class="matrix-cell-white" id="sub_12_20">-3</div><div class="matrix-cell-white" id="sub_12_21">4</div>
+                                    </div>
+                                </div>
+
+                                <!-- Row 2 -->
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_20_01">-2</div><div class="matrix-cell-white" id="sub_20_02">3</div>
+                                        <div class="matrix-cell-white" id="sub_20_11">5</div><div class="matrix-cell-white" id="sub_20_12">4</div>
+                                    </div>
+                                </div>
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_21_00">5</div><div class="matrix-cell-white" id="sub_21_02">3</div>
+                                        <div class="matrix-cell-white" id="sub_21_10">2</div><div class="matrix-cell-white" id="sub_21_12">4</div>
+                                    </div>
+                                </div>
+                                <div class="matrix-bracket matrix-bracket-emerald">
+                                    <div class="matrix-grid g-2x2">
+                                        <div class="matrix-cell-white" id="sub_22_00">5</div><div class="matrix-cell-white" id="sub_22_01">-2</div>
+                                        <div class="matrix-cell-white" id="sub_22_10">2</div><div class="matrix-cell-white" id="sub_22_11">5</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Steps Calculation Array -->
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800 mb-4 bg-white p-4 rounded-xl border border-slate-200">
+                        <span class="text-emerald-900 font-black">=</span>
+                        <div class="matrix-bracket matrix-bracket-emerald bg-emerald-50/50 p-2 rounded-xl">
+                            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                                <!-- Row 0 -->
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_00">5 x 7</div><span>-</span><div class="box-calc-wide" id="mcalc_00_2">4 x 4</div></div>
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_01">2 x 7</div><span>-</span><div class="box-calc-wide" id="mcalc_01_2">4 x -3</div></div>
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_02">2 x 4</div><span>-</span><div class="box-calc-wide" id="mcalc_02_2">5 x -3</div></div>
+
+                                <!-- Row 1 -->
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_10">-2 x 7</div><span>-</span><div class="box-calc-wide" id="mcalc_10_2">3 x 4</div></div>
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_11">5 x 7</div><span>-</span><div class="box-calc-wide" id="mcalc_11_2">3 x -3</div></div>
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_12">5 x 4</div><span>-</span><div class="box-calc-wide" id="mcalc_12_2">-2 x -3</div></div>
+
+                                <!-- Row 2 -->
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_20">-2 x 4</div><span>-</span><div class="box-calc-wide" id="mcalc_20_2">3 x 5</div></div>
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_21">5 x 4</div><span>-</span><div class="box-calc-wide" id="mcalc_21_2">3 x 2</div></div>
+                                <div class="flex items-center justify-center gap-1"><div class="box-calc-wide" id="mcalc_22">5 x 5</div><span>-</span><div class="box-calc-wide" id="mcalc_22_2">-2 x 2</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final Minor 3x3 -->
+                    <div class="flex items-center gap-4 text-sm font-bold text-slate-800">
+                        <span class="text-emerald-900 font-black">= Minor A =</span>
+                        <div class="matrix-bracket matrix-bracket-emerald">
+                            <div class="matrix-grid g-3x3">
+                                <div class="matrix-cell-white" id="min3_00">19</div><div class="matrix-cell-white" id="min3_01">26</div><div class="matrix-cell-white" id="min3_02">23</div>
+                                <div class="matrix-cell-white" id="min3_10">-26</div><div class="matrix-cell-white" id="min3_11">44</div><div class="matrix-cell-white" id="min3_12">14</div>
+                                <div class="matrix-cell-white" id="min3_20">-23</div><div class="matrix-cell-white" id="min3_21">14</div><div class="matrix-cell-white" id="min3_22">29</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cofactor 3x3 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
+                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 3: COFACTOR A (3x3)</div>
+
+                    <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-slate-800">
+                        <span class="text-emerald-900 font-black">COFACTOR A =</span>
+
+                        <!-- Minor values -->
+                        <div class="matrix-bracket matrix-bracket-emerald">
+                            <div class="matrix-grid g-3x3">
+                                <div class="matrix-cell-white" id="c3_m00">19</div><div class="matrix-cell-white" id="c3_m01">26</div><div class="matrix-cell-white" id="c3_m02">23</div>
+                                <div class="matrix-cell-white" id="c3_m10">-26</div><div class="matrix-cell-white" id="c3_m11">44</div><div class="matrix-cell-white" id="c3_m12">14</div>
+                                <div class="matrix-cell-white" id="c3_m20">-23</div><div class="matrix-cell-white" id="c3_m21">14</div><div class="matrix-cell-white" id="c3_m22">29</div>
+                            </div>
+                        </div>
+
+                        <!-- Sign matrix 3x3 -->
+                        <div class="matrix-bracket matrix-bracket-emerald">
+                            <div class="matrix-grid g-3x3">
+                                <div class="matrix-cell-green">+1</div><div class="matrix-cell-green">-1</div><div class="matrix-cell-green">+1</div>
+                                <div class="matrix-cell-green">-1</div><div class="matrix-cell-green">+1</div><div class="matrix-cell-green">-1</div>
+                                <div class="matrix-cell-green">+1</div><div class="matrix-cell-green">-1</div><div class="matrix-cell-green">+1</div>
+                            </div>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <!-- Calculation steps -->
+                        <div class="matrix-bracket matrix-bracket-emerald">
+                            <div class="matrix-grid g-3x3" style="grid-template-columns: repeat(3, 90px);">
+                                <div class="box-calc" id="step3_00">19 x +1</div><div class="box-calc" id="step3_01">26 x -1</div><div class="box-calc" id="step3_02">23 x +1</div>
+                                <div class="box-calc" id="step3_10">-26 x -1</div><div class="box-calc" id="step3_11">44 x +1</div><div class="box-calc" id="step3_12">14 x -1</div>
+                                <div class="box-calc" id="step3_20">-23 x +1</div><div class="box-calc" id="step3_21">14 x -1</div><div class="box-calc" id="step3_22">29 x +1</div>
+                            </div>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <!-- Final Cofactor Matrix 3x3 -->
+                        <div class="matrix-bracket matrix-bracket-emerald">
+                            <div class="matrix-grid g-3x3">
+                                <div class="matrix-cell-white" id="res3_00">19</div><div class="matrix-cell-white" id="res3_01">-26</div><div class="matrix-cell-white" id="res3_02">23</div>
+                                <div class="matrix-cell-white" id="res3_10">26</div><div class="matrix-cell-white" id="res3_11">44</div><div class="matrix-cell-white" id="res3_12">-14</div>
+                                <div class="matrix-cell-white" id="res3_20">-23</div><div class="matrix-cell-white" id="res3_21">-14</div><div class="matrix-cell-white" id="res3_22">29</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adjoint 3x3 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
+                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 4: ADJOIN A = (COFACTOR A)<sup>T</sup></div>
+                    <div class="flex flex-wrap items-center gap-4 text-sm font-bold text-slate-800">
+                        <span class="text-emerald-900 font-black">ADJOIN A =</span>
+                        <div class="relative inline-flex items-start">
+                            <div class="matrix-bracket matrix-bracket-emerald">
+                                <div class="matrix-grid g-3x3">
+                                    <div class="matrix-cell-white" id="adj3_t00">19</div><div class="matrix-cell-white" id="adj3_t01">-26</div><div class="matrix-cell-white" id="adj3_t02">23</div>
+                                    <div class="matrix-cell-white" id="adj3_t10">26</div><div class="matrix-cell-white" id="adj3_t11">44</div><div class="matrix-cell-white" id="adj3_t12">-14</div>
+                                    <div class="matrix-cell-white" id="adj3_t20">-23</div><div class="matrix-cell-white" id="adj3_t21">-14</div><div class="matrix-cell-white" id="adj3_t22">29</div>
+                                </div>
+                            </div>
+                            <span class="text-xs font-black text-emerald-700 ml-0.5 -mt-1">T</span>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <div class="matrix-bracket matrix-bracket-emerald bg-emerald-100/50 p-1.5 rounded-xl">
+                            <div class="matrix-grid g-3x3">
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f00">19</div>
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f01">26</div>
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f02">-23</div>
+
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f10">-26</div>
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f11">44</div>
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f12">-14</div>
+
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f20">23</div>
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f21">-14</div>
+                                <div class="matrix-cell-white bg-emerald-200 border-emerald-800 text-emerald-950" id="adj3_f22">29</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Topic Drawer Modal -->
+    <div id="topicsDrawer" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-white border-4 border-purple-300 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-lg font-black text-slate-800 flex items-center gap-2 font-display">
+                    <i class="fa-solid fa-list-check text-purple-600"></i> Senarai 6 Modul Utama
+                </h3>
+                <button onclick="toggleTopicsDrawer()" class="text-slate-400 hover:text-slate-600 font-bold">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-2 text-xs font-semibold">
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>1. Basic Operation (Addition & Subtraction)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 1</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>2. Basic Operation (Multiplication)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 2</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>3. Find - Determinant (2x2 & 3x3)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 3</span>
+                </div>
+                <div class="p-3 bg-purple-100 border-2 border-purple-400 rounded-xl flex items-center justify-between font-bold text-purple-900">
+                    <span>4. Find - Minor, Cofactor & Adjoint</span>
+                    <span class="bg-purple-600 text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Sedang Dibuka</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>5. Inverse Method - (2x2) & (3x3)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 5</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>6. Cramer's Method - (2x2) & (3x3)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 6</span>
+                </div>
+            </div>
+            <div class="pt-2 text-right">
+                <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2 rounded-xl text-white font-bold text-xs">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getV(id) {
+            let elem = document.getElementById(id);
+            if (!elem) return 0;
+            let v = parseFloat(elem.value);
+            return isNaN(v) ? 0 : v;
+        }
+
+        function setT(id, val) {
+            let elem = document.getElementById(id);
+            if (elem) elem.innerText = val;
+        }
+
+        /* LOGIK 2x2 */
+        function calc2x2() {
+            let a = getV('m2_00'), b = getV('m2_01');
+            let c = getV('m2_10'), d = getV('m2_11');
+
+            let m00 = d, m01 = c, m10 = b, m11 = a;
+
+            setT('min2_00', m00); setT('min2_01', m01);
+            setT('min2_10', m10); setT('min2_11', m11);
+
+            setT('cof2_m00', m00); setT('cof2_m01', m01);
+            setT('cof2_m10', m10); setT('cof2_m11', m11);
+
+            setT('step2_00', `${m00} x +1`); setT('step2_01', `${m01} x -1`);
+            setT('step2_10', `${m10} x -1`); setT('step2_11', `${m11} x +1`);
+
+            let c00 = m00 * 1, c01 = m01 * -1;
+            let c10 = m10 * -1, c11 = m11 * 1;
+
+            setT('res2_00', c00); setT('res2_01', c01);
+            setT('res2_10', c10); setT('res2_11', c11);
+
+            setT('adj2_t00', c00); setT('adj2_t01', c01);
+            setT('adj2_t10', c10); setT('adj2_t11', c11);
+
+            setT('adj2_f00', c00); setT('adj2_f01', c10);
+            setT('adj2_f10', c01); setT('adj2_f11', c11);
+        }
+
+        /* LOGIK 3x3 */
+        function calc3x3() {
+            let a = getV('m3_00'), b = getV('m3_01'), c = getV('m3_02');
+            let d = getV('m3_10'), e = getV('m3_11'), f = getV('m3_12');
+            let g = getV('m3_20'), h = getV('m3_21'), i = getV('m3_22');
+
+            // 9 Sub matrices
+            setT('sub_00_11', e); setT('sub_00_12', f); setT('sub_00_21', h); setT('sub_00_22', i);
+            setT('sub_01_10', d); setT('sub_01_12', f); setT('sub_01_20', g); setT('sub_01_22', i);
+            setT('sub_02_10', d); setT('sub_02_11', e); setT('sub_02_20', g); setT('sub_02_21', h);
+
+            setT('sub_10_01', b); setT('sub_10_02', c); setT('sub_10_21', h); setT('sub_10_22', i);
+            setT('sub_11_00', a); setT('sub_11_02', c); setT('sub_11_20', g); setT('sub_11_22', i);
+            setT('sub_12_00', a); setT('sub_12_01', b); setT('sub_12_20', g); setT('sub_12_21', h);
+
+            setT('sub_20_01', b); setT('sub_20_02', c); setT('sub_20_11', e); setT('sub_20_12', f);
+            setT('sub_21_00', a); setT('sub_21_02', c); setT('sub_21_10', d); setT('sub_21_12', f);
+            setT('sub_22_00', a); setT('sub_22_01', b); setT('sub_22_10', d); setT('sub_22_11', e);
+
+            // Calculation text
+            setT('mcalc_00', `${e} x ${i}`); setT('mcalc_00_2', `${f} x ${h}`);
+            setT('mcalc_01', `${d} x ${i}`); setT('mcalc_01_2', `${f} x ${g}`);
+            setT('mcalc_02', `${d} x ${h}`); setT('mcalc_02_2', `${e} x ${g}`);
+
+            setT('mcalc_10', `${b} x ${i}`); setT('mcalc_10_2', `${c} x ${h}`);
+            setT('mcalc_11', `${a} x ${i}`); setT('mcalc_11_2', `${c} x ${g}`);
+            setT('mcalc_12', `${a} x ${h}`); setT('mcalc_12_2', `${b} x ${g}`);
+
+            setT('mcalc_20', `${b} x ${f}`); setT('mcalc_20_2', `${c} x ${e}`);
+            setT('mcalc_21', `${a} x ${f}`); setT('mcalc_21_2', `${c} x ${d}`);
+            setT('mcalc_22', `${a} x ${e}`); setT('mcalc_22_2', `${b} x ${d}`);
+
+            // Calculate Minor values
+            let m00 = (e*i)-(f*h), m01 = (d*i)-(f*g), m02 = (d*h)-(e*g);
+            let m10 = (b*i)-(c*h), m11 = (a*i)-(c*g), m12 = (a*h)-(b*g);
+            let m20 = (b*f)-(c*e), m21 = (a*f)-(c*d), m22 = (a*e)-(b*d);
+
+            let mArr = [[m00, m01, m02], [m10, m11, m12], [m20, m21, m22]];
+            for(let r=0; r<3; r++) {
+                for(let col=0; col<3; col++) {
+                    setT(`min3_${r}${col}`, mArr[r][col]);
+                    setT(`c3_m${r}${col}`, mArr[r][col]);
+                }
+            }
+
+            // Calculate Cofactor & Adjoint
+            let signs = [[1, -1, 1], [-1, 1, -1], [1, -1, 1]];
+            let cArr = [[0,0,0],[0,0,0],[0,0,0]];
+
+            for(let r=0; r<3; r++) {
+                for(let col=0; col<3; col++) {
+                    let sStr = signs[r][col] === 1 ? '+1' : '-1';
+                    setT(`step3_${r}${col}`, `${mArr[r][col]} x ${sStr}`);
+                    cArr[r][col] = mArr[r][col] * signs[r][col];
+                    setT(`res3_${r}${col}`, cArr[r][col]);
+                    setT(`adj3_t${r}${col}`, cArr[r][col]);
+                }
+            }
+
+            for(let r=0; r<3; r++) {
+                for(let col=0; col<3; col++) {
+                    setT(`adj3_f${r}${col}`, cArr[col][r]);
+                }
+            }
+        }
+
+        function toggleTopicsDrawer() {
+            document.getElementById('topicsDrawer').classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            calc2x2();
+            calc3x3();
+
+            if (window.katex) {
+                try {
+                    katex.render("\\text{Adj}(A) = (\\text{Cofactor}(A))^T", document.getElementById('katex_f2'));
+                    katex.render("\\text{Minor}(M_{ij}) \\rightarrow \\text{Cofactor}(C_{ij} = (-1)^{i+j}M_{ij}) \\rightarrow \\text{Adjoint}(A = C^T)", document.getElementById('katex_f3'));
+                } catch(e) {}
+            }
+        });
+    </script>
+</body>
+</html>

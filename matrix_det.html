@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Penentu Matriks 3D (Determinant)</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandSky: '#38bdf8',
+                        brandBlue: '#0284c7',
+                        brandDarkBlue: '#1e3a8a',
+                        brandYellow: '#facc15',
+                        brandGreen: '#10b981',
+                        brandRed: '#ef4444',
+                        brandPurple: '#8b5cf6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fredoka', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
+    <!-- KaTeX Math Renderer -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 45%, #0369a1 100%);
+            min-height: 100vh;
+            color: #0f172a;
+        }
+
+        /* 3D Extruded Text Effect (Poster Style) */
+        .text-3d-yellow {
+            color: #facc15;
+            text-shadow: 
+                2px 2px 0px #b45309,
+                4px 4px 0px #78350f,
+                6px 6px 10px rgba(0, 0, 0, 0.4);
+        }
+        
+        .text-3d-white {
+            color: #ffffff;
+            text-shadow: 
+                2px 2px 0px #1e3a8a,
+                4px 4px 0px #0f172a,
+                6px 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Poster Style Section Containers */
+        .poster-card-blue {
+            background: #fdf8e6;
+            border: 4px solid #38bdf8;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #0284c7, 0 18px 30px rgba(0,0,0,0.3);
+        }
+
+        .poster-card-green {
+            background: #fdf8e6;
+            border: 4px solid #34d399;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #059669, 0 18px 30px rgba(0,0,0,0.3);
+        }
+
+        .poster-card-purple {
+            background: #fdf8e6;
+            border: 4px solid #a78bfa;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #6d28d9, 0 18px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Poster Header Bars */
+        .poster-header-blue {
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            border-bottom: 4px solid #1e3a8a;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .poster-header-green {
+            background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+            border-bottom: 4px solid #064e3b;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .poster-header-purple {
+            background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+            border-bottom: 4px solid #4c1d95;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        /* 3D Glossy Buttons */
+        .btn-3d-blue {
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            border-bottom: 4px solid #0369a1;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-blue:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        /* 3D Matrix Brackets */
+        .matrix-bracket {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding: 4px 8px;
+        }
+
+        .matrix-bracket::before, .matrix-bracket::after {
+            content: "";
+            position: absolute;
+            top: -3px;
+            bottom: -3px;
+            width: 10px;
+            border: 3px solid #1d4ed8;
+        }
+
+        .matrix-bracket::before {
+            left: 0;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .matrix-bracket::after {
+            right: 0;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .matrix-bracket-green::before, .matrix-bracket-green::after {
+            border-color: #047857;
+        }
+
+        .matrix-bracket-purple::before, .matrix-bracket-purple::after {
+            border-color: #5b21b6;
+        }
+
+        /* Matrix Grid & Cells */
+        .matrix-grid {
+            display: grid;
+            gap: 6px;
+        }
+
+        .g-2x2 { grid-template-columns: repeat(2, 46px); grid-template-rows: repeat(2, 42px); }
+        .g-3x3 { grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 40px); }
+        .g-3x5 { grid-template-columns: repeat(5, 42px); grid-template-rows: repeat(3, 38px); }
+
+        /* Input Cell Styling (Yellow Background) */
+        .matrix-grid input, .matrix-input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background-color: #ffff00;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #000;
+            box-sizing: border-box;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+            transition: all 0.15s ease;
+        }
+
+        .matrix-grid input:focus, .matrix-input:focus {
+            background-color: #ffffff;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Auto-filled Cell Styling (White Background) */
+        .matrix-cell-white {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #1e3a8a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        /* Hide Number Spinner Arrows */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Boxed Calculation Displays */
+        .box-calc {
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 4px 10px;
+            background-color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 65px;
+            font-weight: 800;
+            font-size: 13px;
+            color: #1e3a8a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .result-bold-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #dcfce7;
+            border: 3px solid #15803d;
+            border-radius: 12px;
+            padding: 6px 14px;
+            font-size: 18px;
+            font-weight: 900;
+            color: #166534;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Sarrus Diagram Overlays */
+        .diagram-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .arrow-line {
+            stroke: #d97706;
+            stroke-width: 3;
+            stroke-dasharray: 4,2;
+            marker-end: url(#arrowhead);
+        }
+
+        /* Label Tag */
+        .label-tag {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0f2fe;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
+
+    <!-- Top Header Banner -->
+    <header class="max-w-6xl mx-auto pt-6 px-4">
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
+            <!-- Background Decorative Stars -->
+            <div class="absolute -top-3 -right-3 text-yellow-400 text-3xl opacity-30 pointer-events-none">
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+            <!-- Left Logo & Branding -->
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-gradient-to-tr from-blue-700 via-sky-500 to-sky-300 rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                    [M]
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="bg-gradient-to-r from-red-600 to-rose-500 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow-sm tracking-widest uppercase">
+                            MODUL SESI 2026/2027
+                        </span>
+                        <span class="bg-sky-100 text-sky-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-sky-300 flex items-center gap-1">
+                            <i class="fa-brands fa-github text-slate-800"></i> GitHub Ready
+                        </span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight leading-tight font-display">
+                        HUB PEMBELAJARAN & KALKULATOR MATRIKS 3D
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Navigation Button -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group"></i> 6 Modul Topik
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-6">
+        <section class="relative bg-gradient-to-b from-sky-400 via-blue-500 to-blue-700 rounded-3xl p-6 sm:p-8 border-4 border-white shadow-2xl overflow-hidden mb-8 text-center">
+            <!-- Floating Icons -->
+            <div class="absolute top-3 left-6 text-yellow-300 text-3xl animate-bounce pointer-events-none drop-shadow-lg">
+                <i class="fa-solid fa-square-root-variable"></i>
+            </div>
+            <div class="absolute bottom-4 right-6 text-yellow-300 text-4xl animate-pulse pointer-events-none drop-shadow-lg">
+                <i class="fa-solid fa-table-cells"></i>
+            </div>
+
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <!-- Red Pill Badge -->
+                <div class="inline-block bg-gradient-to-r from-red-600 via-rose-500 to-red-600 text-white font-black text-xs sm:text-sm px-6 py-1.5 rounded-full border-2 border-white shadow-lg mb-3 tracking-widest uppercase">
+                    MODUL KALKULATOR MATRIKS LIVE
+                </div>
+
+                <!-- 3D Extruded Big Title -->
+                <h2 class="text-2xl sm:text-4xl font-black font-display tracking-wide mb-2 text-3d-yellow uppercase">
+                    FIND - DETERMINANT
+                </h2>
+                <h3 class="text-xl sm:text-2xl font-black font-display text-3d-white uppercase mb-4">
+                    (2x2 & 3x3)
+                </h3>
+
+                <p class="text-white text-xs sm:text-sm font-semibold leading-relaxed bg-blue-950/40 p-3.5 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
+                    Masukkan sebarang nombor pada petak matriks bernombor <span class="bg-yellow-300 text-slate-900 font-extrabold px-1.5 py-0.5 rounded">kuning</span> di bawah. Pengiraan nilai penentu $|A|$ melalui **Method 1 (Minor Expansion)** dan **Method 2 (Sarrus Rule)** akan dikemas kini secara **langsung (*live*)**!
+                </p>
+            </div>
+        </section>
+
+        <!-- SEKSYEN 1: METHOD 1 (EXPANSION / MINOR) -->
+        <section class="poster-card-blue p-4 sm:p-6 mb-8">
+            <!-- Header Bar -->
+            <div class="poster-header-blue p-3.5 rounded-2xl text-white mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
+                        1
+                    </div>
+                    <div>
+                        <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
+                            METHOD 1: EXPANSION BY MINORS / COFACTORS
+                        </h3>
+                        <p class="text-[11px] text-sky-100 font-semibold" id="katex_formula_m1">Formula 2x2: $|A| = ad - bc$ | Formula 3x3: $|A| = a M_{11} - b M_{12} + c M_{13}$</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8 overflow-x-auto pb-4">
+                <!-- 1. DETERMINANT FOR (2x2) -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-sky-200 shadow-sm min-w-[780px]">
+                    <div class="label-tag inline-block mb-4">
+                        DETERMINANT FOR : (2x2)
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-4 text-sm font-bold text-slate-800">
+                        <span class="text-base font-serif italic text-blue-900">A</span>
+                        <span class="text-lg font-black">=</span>
+
+                        <!-- Matriks Input 2x2 -->
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-2x2">
+                                <input type="number" id="m2_00" value="6" oninput="update2x2()">
+                                <input type="number" id="m2_01" value="1" oninput="update2x2()">
+                                <input type="number" id="m2_10" value="0" oninput="update2x2()">
+                                <input type="number" id="m2_11" value="-4" oninput="update2x2()">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 ml-4">
+                            <span class="text-slate-600 font-black">Determinant of A:</span>
+                            <span class="text-blue-900 font-black">|A| =</span>
+                            <div class="box-calc" id="calc2_1">6 x -4</div>
+                            <span class="text-xl font-black text-rose-600">-</span>
+                            <div class="box-calc" id="calc2_2">1 x 0</div>
+                            <span class="text-xl font-black text-slate-800">=</span>
+                            <div class="result-bold-badge" id="res2x2">-24</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. DETERMINANT FOR (3x3) - METHOD 1 -->
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-sky-200 shadow-sm min-w-[850px]">
+                    <div class="label-tag inline-block mb-4">
+                        DETERMINANT FOR : (3x3) [Kembangan Baris Pertama]
+                    </div>
+
+                    <!-- Input Matriks A 3x3 -->
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="text-base font-serif italic text-blue-900 font-black">A</span>
+                        <span class="text-lg font-black">=</span>
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-3x3">
+                                <input type="number" id="m31_00" value="8" oninput="update3x3_Method1()">
+                                <input type="number" id="m31_01" value="7" oninput="update3x3_Method1()">
+                                <input type="number" id="m31_02" value="9" oninput="update3x3_Method1()">
+
+                                <input type="number" id="m31_10" value="-5" oninput="update3x3_Method1()">
+                                <input type="number" id="m31_11" value="2" oninput="update3x3_Method1()">
+                                <input type="number" id="m31_12" value="1" oninput="update3x3_Method1()">
+
+                                <input type="number" id="m31_20" value="0" oninput="update3x3_Method1()">
+                                <input type="number" id="m31_21" value="-7" oninput="update3x3_Method1()">
+                                <input type="number" id="m31_22" value="6" oninput="update3x3_Method1()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Minor Matrix Breakdown -->
+                    <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-slate-800 mb-4 bg-sky-50/80 p-4 rounded-xl border border-sky-200">
+                        <span class="text-blue-900 font-black">|A| =</span>
+
+                        <!-- Term 1: + a * |sub1| -->
+                        <span class="text-blue-700 font-extrabold text-base" id="c1_a">8</span>
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="sub1_11">2</div>
+                                <div class="matrix-cell-white" id="sub1_12">1</div>
+                                <div class="matrix-cell-white" id="sub1_21">-7</div>
+                                <div class="matrix-cell-white" id="sub1_22">6</div>
+                            </div>
+                        </div>
+
+                        <!-- Term 2: - b * |sub2| -->
+                        <span class="text-rose-600 font-black text-lg">-</span>
+                        <span class="text-blue-700 font-extrabold text-base" id="c1_b">7</span>
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="sub2_10">-5</div>
+                                <div class="matrix-cell-white" id="sub2_12">1</div>
+                                <div class="matrix-cell-white" id="sub2_20">0</div>
+                                <div class="matrix-cell-white" id="sub2_22">6</div>
+                            </div>
+                        </div>
+
+                        <!-- Term 3: + c * |sub3| -->
+                        <span class="text-emerald-600 font-black text-lg">+</span>
+                        <span class="text-blue-700 font-extrabold text-base" id="c1_c">9</span>
+                        <div class="matrix-bracket matrix-bracket-purple">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="sub3_10">-5</div>
+                                <div class="matrix-cell-white" id="sub3_11">2</div>
+                                <div class="matrix-cell-white" id="sub3_20">0</div>
+                                <div class="matrix-cell-white" id="sub3_21">-7</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final Calculation Step -->
+                    <div class="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-800 bg-white p-3.5 rounded-xl border border-slate-200">
+                        <span class="text-blue-900 font-black">|A| =</span>
+                        <span class="text-blue-700 font-black text-base" id="f1_a">8</span>
+                        <span>(</span>
+                        <div class="box-calc" id="f1_b1">2 x 6</div>
+                        <span class="text-rose-600 font-black">-</span>
+                        <div class="box-calc" id="f1_b2">1 x -7</div>
+                        <span>)</span>
+
+                        <span class="text-rose-600 font-black text-base">-</span>
+                        <span class="text-blue-700 font-black text-base" id="f1_c">7</span>
+                        <span>(</span>
+                        <div class="box-calc" id="f1_d1">-5 x 6</div>
+                        <span class="text-rose-600 font-black">-</span>
+                        <div class="box-calc" id="f1_d2">1 x 0</div>
+                        <span>)</span>
+
+                        <span class="text-emerald-600 font-black text-base">+</span>
+                        <span class="text-blue-700 font-black text-base" id="f1_e">9</span>
+                        <span>(</span>
+                        <div class="box-calc" id="f1_f1">-5 x -7</div>
+                        <span class="text-rose-600 font-black">-</span>
+                        <div class="box-calc" id="f1_f2">2 x 0</div>
+                        <span>)</span>
+
+                        <span class="text-lg font-black text-slate-800 ml-2">=</span>
+                        <div class="result-bold-badge ml-1" id="res3x3_m1">677</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKSYEN 2: METHOD 2 (PETUA SARRUS) -->
+        <section class="poster-card-green p-4 sm:p-6 mb-8">
+            <!-- Header Bar -->
+            <div class="poster-header-green p-3.5 rounded-2xl text-white mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
+                        2
+                    </div>
+                    <div>
+                        <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
+                            METHOD 2: PETUA SARRUS / DIAGRAM DIAGONAL
+                        </h3>
+                        <p class="text-[11px] text-emerald-100 font-semibold" id="katex_formula_m2">Formula: $|A| = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})$</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8 overflow-x-auto pb-4">
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
+                    <div class="label-tag flex-shrink-0 inline-block mb-4">
+                        DETERMINANT FOR : (3x3) [Penambahan 2 Kolum Pertama]
+                    </div>
+
+                    <!-- Input Matriks Utama 3x3 dengan Kolum Salinan Auto -->
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="text-base font-serif italic text-blue-900 font-black">A</span>
+                        <span class="text-lg font-black">=</span>
+                        <div class="matrix-bracket matrix-bracket-green">
+                            <div class="matrix-grid g-3x5">
+                                <!-- 3x3 Input Original (Kuning) -->
+                                <input type="number" id="m32_00" value="2" oninput="update3x3_Method2()">
+                                <input type="number" id="m32_01" value="-4" oninput="update3x3_Method2()">
+                                <input type="number" id="m32_02" value="9" oninput="update3x3_Method2()">
+                                <!-- Duplicated Col 1 & 2 (Putih) -->
+                                <div class="matrix-cell-white" id="dup1_00">2</div>
+                                <div class="matrix-cell-white" id="dup1_01">-4</div>
+
+                                <input type="number" id="m32_10" value="-5" oninput="update3x3_Method2()">
+                                <input type="number" id="m32_11" value="2" oninput="update3x3_Method2()">
+                                <input type="number" id="m32_12" value="1" oninput="update3x3_Method2()">
+                                <div class="matrix-cell-white" id="dup1_10">-5</div>
+                                <div class="matrix-cell-white" id="dup1_11">2</div>
+
+                                <input type="number" id="m32_20" value="0" oninput="update3x3_Method2()">
+                                <input type="number" id="m32_21" value="-7" oninput="update3x3_Method2()">
+                                <input type="number" id="m32_22" value="6" oninput="update3x3_Method2()">
+                                <div class="matrix-cell-white" id="dup1_20">0</div>
+                                <div class="matrix-cell-white" id="dup1_21">-7</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sarrus Diagrams Section -->
+                    <div class="flex flex-wrap items-center gap-6 mb-6 bg-emerald-50/80 p-4 rounded-xl border border-emerald-200">
+                        <span class="text-blue-900 font-black text-sm">|A| =</span>
+
+                        <!-- Diagram 1 (Diagonal Kanan / Utamakan) -->
+                        <div class="diagram-container">
+                            <div class="matrix-bracket matrix-bracket-green bg-white rounded-xl">
+                                <div class="matrix-grid g-3x5">
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_00">2</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_01">-4</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_02">9</div>
+                                    <div class="matrix-cell-white" id="d1_03">2</div>
+                                    <div class="matrix-cell-white" id="d1_04">-4</div>
+
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_10">-5</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_11">2</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_12">1</div>
+                                    <div class="matrix-cell-white" id="d1_13">-5</div>
+                                    <div class="matrix-cell-white" id="d1_14">2</div>
+
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_20">0</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_21">-7</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d1_22">6</div>
+                                    <div class="matrix-cell-white" id="d1_23">0</div>
+                                    <div class="matrix-cell-white" id="d1_24">-7</div>
+                                </div>
+                            </div>
+                            <svg class="svg-overlay">
+                                <defs>
+                                    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#d97706"/>
+                                    </marker>
+                                </defs>
+                                <line x1="22" y1="18" x2="110" y2="105" class="arrow-line" />
+                                <line x1="64" y1="18" x2="152" y2="105" class="arrow-line" />
+                                <line x1="106" y1="18" x2="194" y2="105" class="arrow-line" />
+                            </svg>
+                        </div>
+
+                        <span class="text-2xl font-black text-rose-600">-</span>
+
+                        <!-- Diagram 2 (Diagonal Kiri) -->
+                        <div class="diagram-container">
+                            <div class="matrix-bracket matrix-bracket-green bg-white rounded-xl">
+                                <div class="matrix-grid g-3x5">
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_00">2</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_01">-4</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_02">9</div>
+                                    <div class="matrix-cell-white" id="d2_03">2</div>
+                                    <div class="matrix-cell-white" id="d2_04">-4</div>
+
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_10">-5</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_11">2</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_12">1</div>
+                                    <div class="matrix-cell-white" id="d2_13">-5</div>
+                                    <div class="matrix-cell-white" id="d2_14">2</div>
+
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_20">0</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_21">-7</div>
+                                    <div class="matrix-cell-white bg-yellow-200" id="d2_22">6</div>
+                                    <div class="matrix-cell-white" id="d2_23">0</div>
+                                    <div class="matrix-cell-white" id="d2_24">-7</div>
+                                </div>
+                            </div>
+                            <svg class="svg-overlay">
+                                <line x1="110" y1="18" x2="22" y2="105" class="arrow-line" />
+                                <line x1="152" y1="18" x2="64" y2="105" class="arrow-line" />
+                                <line x1="194" y1="18" x2="106" y2="105" class="arrow-line" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Steps Calculation Bar -->
+                    <div class="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-800 bg-white p-4 rounded-xl border border-slate-200">
+                        <span class="text-blue-900 font-black">|A| =</span>
+                        <span>(</span>
+                        <div class="box-calc" id="m2_p1">2 x 2 x 6</div>
+                        <span class="text-emerald-600 font-black">+</span>
+                        <div class="box-calc" id="m2_p2">-4 x 1 x 0</div>
+                        <span class="text-emerald-600 font-black">+</span>
+                        <div class="box-calc" id="m2_p3">9 x -5 x -7</div>
+                        <span>)</span>
+
+                        <span class="text-rose-600 font-black text-xl mx-1">-</span>
+
+                        <span>(</span>
+                        <div class="box-calc" id="m2_n1">9 x 2 x 0</div>
+                        <span class="text-emerald-600 font-black">+</span>
+                        <div class="box-calc" id="m2_n2">2 x 1 x -7</div>
+                        <span class="text-emerald-600 font-black">+</span>
+                        <div class="box-calc" id="m2_n3">-4 x -5 x 6</div>
+                        <span>)</span>
+
+                        <span class="text-lg font-black text-slate-800 ml-2">=</span>
+                        <div class="result-bold-badge ml-1" id="res3x3_m2">233</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Topic Drawer Modal -->
+    <div id="topicsDrawer" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-white border-4 border-sky-300 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-lg font-black text-slate-800 flex items-center gap-2 font-display">
+                    <i class="fa-solid fa-list-check text-blue-600"></i> Senarai 6 Modul Utama
+                </h3>
+                <button onclick="toggleTopicsDrawer()" class="text-slate-400 hover:text-slate-600 font-bold">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-2 text-xs font-semibold">
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>1. Basic Operation (Addition & Subtraction)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 1</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>2. Basic Operation (Multiplication)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 2</span>
+                </div>
+                <div class="p-3 bg-sky-100 border-2 border-sky-400 rounded-xl flex items-center justify-between font-bold text-sky-900">
+                    <span>3. Find - Determinant (2x2 & 3x3)</span>
+                    <span class="bg-sky-500 text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Sedang Dibuka</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>4. Find - Minor, Cofactor & Adjoint</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 4</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>5. Inverse Method - (2x2) & (3x3)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 5</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>6. Cramer's Method - (2x2) & (3x3)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 6</span>
+                </div>
+            </div>
+            <div class="pt-2 text-right">
+                <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2 rounded-xl text-white font-bold text-xs">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to safely read matrix values
+        function getVal(id) {
+            let elem = document.getElementById(id);
+            if (!elem) return 0;
+            let val = parseFloat(elem.value);
+            return isNaN(val) ? 0 : val;
+        }
+
+        // Method 1: Update 2x2 Determinant
+        function update2x2() {
+            let a = getVal('m2_00');
+            let b = getVal('m2_01');
+            let c = getVal('m2_10');
+            let d = getVal('m2_11');
+
+            document.getElementById('calc2_1').innerText = `${a} x ${d}`;
+            document.getElementById('calc2_2').innerText = `${b} x ${c}`;
+            document.getElementById('res2x2').innerText = (a * d) - (b * c);
+        }
+
+        // Method 1: Update 3x3 Determinant (Minor Expansion)
+        function update3x3_Method1() {
+            let a = getVal('m31_00'), b = getVal('m31_01'), c = getVal('m31_02');
+            let d = getVal('m31_10'), e = getVal('m31_11'), f = getVal('m31_12');
+            let g = getVal('m31_20'), h = getVal('m31_21'), i = getVal('m31_22');
+
+            // Update Minor Matrix Display Cells
+            document.getElementById('c1_a').innerText = a;
+            document.getElementById('c1_b').innerText = b;
+            document.getElementById('c1_c').innerText = c;
+
+            document.getElementById('sub1_11').innerText = e;
+            document.getElementById('sub1_12').innerText = f;
+            document.getElementById('sub1_21').innerText = h;
+            document.getElementById('sub1_22').innerText = i;
+
+            document.getElementById('sub2_10').innerText = d;
+            document.getElementById('sub2_12').innerText = f;
+            document.getElementById('sub2_20').innerText = g;
+            document.getElementById('sub2_22').innerText = i;
+
+            document.getElementById('sub3_10').innerText = d;
+            document.getElementById('sub3_11').innerText = e;
+            document.getElementById('sub3_20').innerText = g;
+            document.getElementById('sub3_21').innerText = h;
+
+            // Update Formula Boxes
+            document.getElementById('f1_a').innerText = a;
+            document.getElementById('f1_b1').innerText = `${e} x ${i}`;
+            document.getElementById('f1_b2').innerText = `${f} x ${h}`;
+
+            document.getElementById('f1_c').innerText = b;
+            document.getElementById('f1_d1').innerText = `${d} x ${i}`;
+            document.getElementById('f1_d2').innerText = `${f} x ${g}`;
+
+            document.getElementById('f1_e').innerText = c;
+            document.getElementById('f1_f1').innerText = `${d} x ${h}`;
+            document.getElementById('f1_f2').innerText = `${e} x ${g}`;
+
+            // Calculate Result
+            let m1 = (e * i) - (f * h);
+            let m2 = (d * i) - (f * g);
+            let m3 = (d * h) - (e * g);
+            let total = (a * m1) - (b * m2) + (c * m3);
+
+            document.getElementById('res3x3_m1').innerText = total;
+        }
+
+        // Method 2: Update 3x3 Determinant (Sarrus Rule)
+        function update3x3_Method2() {
+            let a = getVal('m32_00'), b = getVal('m32_01'), c = getVal('m32_02');
+            let d = getVal('m32_10'), e = getVal('m32_11'), f = getVal('m32_12');
+            let g = getVal('m32_20'), h = getVal('m32_21'), i = getVal('m32_22');
+
+            const setCell = (id, val) => {
+                let elem = document.getElementById(id);
+                if (elem) elem.innerText = val;
+            };
+
+            // Set Duplicated Columns (Col 1 & Col 2)
+            setCell('dup1_00', a); setCell('dup1_10', d); setCell('dup1_20', g);
+            setCell('dup1_01', b); setCell('dup1_11', e); setCell('dup1_21', h);
+
+            // Update Sarrus Diagrams Cells
+            let matrixVals = [[a,b,c,a,b], [d,e,f,d,e], [g,h,i,g,h]];
+            for (let r = 0; r < 3; r++) {
+                for (let col = 0; col < 5; col++) {
+                    setCell(`d1_${r}${col}`, matrixVals[r][col]);
+                    setCell(`d2_${r}${col}`, matrixVals[r][col]);
+                }
+            }
+
+            // Formula Text Boxes
+            document.getElementById('m2_p1').innerText = `${a} x ${e} x ${i}`;
+            document.getElementById('m2_p2').innerText = `${b} x ${f} x ${g}`;
+            document.getElementById('m2_p3').innerText = `${c} x ${d} x ${h}`;
+
+            document.getElementById('m2_n1').innerText = `${c} x ${e} x ${g}`;
+            document.getElementById('m2_n2').innerText = `${a} x ${f} x ${h}`;
+            document.getElementById('m2_n3').innerText = `${b} x ${d} x ${i}`;
+
+            // Calculate Total
+            let p1 = a * e * i, p2 = b * f * g, p3 = c * d * h;
+            let n1 = c * e * g, n2 = a * f * h, n3 = b * d * i;
+
+            let total = (p1 + p2 + p3) - (n1 + n2 + n3);
+            document.getElementById('res3x3_m2').innerText = total;
+        }
+
+        // Toggle Drawer Control
+        function toggleTopicsDrawer() {
+            document.getElementById('topicsDrawer').classList.toggle('hidden');
+        }
+
+        // Auto Run & Listener Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            update2x2();
+            update3x3_Method1();
+            update3x3_Method2();
+
+            // Render KaTeX Math Formulas
+            if (window.katex) {
+                try {
+                    katex.render("|A| = ad - bc \\quad \\text{dan} \\quad |A| = a M_{11} - b M_{12} + c M_{13}", document.getElementById('katex_formula_m1'));
+                    katex.render("|A| = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})", document.getElementById('katex_formula_m2'));
+                } catch(e) {}
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cramer's Method (2x2 & 3x3) - Modul Matriks 3D</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandSky: '#38bdf8',
+                        brandBlue: '#0284c7',
+                        brandDarkBlue: '#1e3a8a',
+                        brandYellow: '#facc15',
+                        brandOrange: '#f97316',
+                        brandRose: '#f43f5e',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fredoka', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 45%, #0369a1 100%);
+            min-height: 100vh;
+            color: #0f172a;
+        }
+
+        /* 3D Extruded Text Effect */
+        .text-3d-yellow {
+            color: #facc15;
+            text-shadow: 
+                2px 2px 0px #b45309,
+                4px 4px 0px #78350f,
+                6px 6px 10px rgba(0, 0, 0, 0.4);
+        }
+        
+        .text-3d-white {
+            color: #ffffff;
+            text-shadow: 
+                2px 2px 0px #1e3a8a,
+                4px 4px 0px #0f172a,
+                6px 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Poster Style Section Containers */
+        .poster-card-orange {
+            background: #fff7ed;
+            border: 4px solid #ea580c;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #c2410c, 0 18px 30px rgba(0,0,0,0.3);
+        }
+
+        .poster-card-indigo {
+            background: #f0f9ff;
+            border: 4px solid #2563eb;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #1d4ed8, 0 18px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Poster Header Bars */
+        .poster-header-orange {
+            background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
+            border-bottom: 4px solid #9a3412;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .poster-header-indigo {
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+            border-bottom: 4px solid #1e40af;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .btn-3d-blue {
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            border-bottom: 4px solid #0369a1;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-blue:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        /* 3D Matrix Brackets */
+        .matrix-bracket {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding: 4px 6px;
+        }
+
+        .matrix-bracket::before, .matrix-bracket::after {
+            content: "";
+            position: absolute;
+            top: -2px;
+            bottom: -2px;
+            width: 8px;
+            border: 3px solid #0284c7;
+        }
+
+        .matrix-bracket::before {
+            left: 0;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .matrix-bracket::after {
+            right: 0;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Matrix Grids */
+        .matrix-grid {
+            display: grid;
+            gap: 4px;
+        }
+
+        .g-1x2 { grid-template-columns: repeat(1, 42px); grid-template-rows: repeat(2, 34px); }
+        .g-1x3 { grid-template-columns: repeat(1, 42px); grid-template-rows: repeat(3, 30px); }
+        .g-2x2 { grid-template-columns: repeat(2, 42px); grid-template-rows: repeat(2, 34px); }
+        .g-3x3 { grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(3, 30px); }
+
+        /* Input Cell Styling (Yellow Background) */
+        .matrix-grid input, .matrix-input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background-color: #ffff00;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #000;
+            box-sizing: border-box;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .matrix-cell-white {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #0f172a;
+            padding: 0 2px;
+            min-width: 40px;
+            min-height: 28px;
+        }
+
+        /* Hide Number Spinner Arrows */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Fraction styling - Standard Line Width */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            padding: 0 4px;
+            font-weight: 800;
+            font-size: 12px;
+            line-height: 1.15;
+            width: auto !important;
+            max-width: fit-content;
+        }
+
+        .fraction .num {
+            border-bottom: 2px solid #000000;
+            padding: 0 4px 1px 4px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .fraction .den {
+            padding: 1px 4px 0 4px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Label Badges & Note Callouts */
+        .step-badge {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 5px 14px;
+            font-weight: 800;
+            font-size: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .step-badge-blue {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 5px 14px;
+            font-weight: 800;
+            font-size: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .note-box-3d {
+            background-color: #fff1f2;
+            border: 2px solid #f43f5e;
+            color: #881337;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 0 #be123c;
+        }
+
+        .underline-res {
+            text-decoration: underline;
+            font-weight: 800;
+            font-size: 15px;
+            color: #1e3a8a;
+        }
+    </style>
+</head>
+<body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
+
+    <header class="max-w-6xl mx-auto pt-6 px-4">
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-gradient-to-tr from-amber-600 via-orange-500 to-yellow-400 rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                    [MCA]
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="bg-gradient-to-r from-red-600 to-rose-500 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow-sm uppercase">
+                            MODUL SESI 2026/2027
+                        </span>
+                        <span class="bg-orange-100 text-orange-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-orange-300">
+                            <i class="fa-solid fa-calculator"></i> Topik 6
+                        </span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight leading-tight font-display">
+                        CRAMER'S METHOD (2x2 & 3x3)
+                    </h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group"></i> 6 Modul Topik
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-6">
+        <!-- Banner Section -->
+        <section class="relative bg-gradient-to-b from-orange-500 via-orange-600 to-amber-700 rounded-3xl p-6 sm:p-8 border-4 border-white shadow-2xl overflow-hidden mb-8 text-center">
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <div class="inline-block bg-gradient-to-r from-yellow-300 to-amber-400 text-slate-900 font-black text-xs sm:text-sm px-6 py-1 rounded-full border-2 border-white shadow-lg mb-3 tracking-widest uppercase">
+                    KALKULATOR PENUHKAN MODUL
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-black font-display tracking-wide mb-2 text-3d-yellow uppercase">
+                    CRAMER'S METHOD
+                </h2>
+                <h3 class="text-lg sm:text-xl font-black font-display text-3d-white uppercase mb-4">
+                    Sistem Persamaan Linear Menggunakan Petua Cramer
+                </h3>
+                <p class="text-white text-xs sm:text-sm font-semibold leading-relaxed bg-orange-950/40 p-3.5 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
+                    Masukkan nilai pekali persamaan pada petak <span class="bg-yellow-300 text-slate-900 font-extrabold px-1.5 py-0.5 rounded">kuning</span>. Pengiraan penentu $|A|$, $|A_1|$, $|A_2|$ dan $|A_3|$ dikemaskini secara **langsung (*live*)**!
+                </p>
+            </div>
+        </section>
+
+        <!-- SEKSYEN 1: CRAMER'S METHOD (2x2) -->
+        <section class="poster-card-orange p-4 sm:p-6 mb-8">
+            <div class="poster-header-orange p-3.5 rounded-2xl text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
+                    1
+                </div>
+                <div>
+                    <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
+                        CRAMER'S METHOD FOR : (2x2)
+                    </h3>
+                    <p class="text-[11px] text-orange-100 font-semibold">Penyelesaian Sistem 2 Persamaan Linear</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 overflow-x-auto pb-4">
+                <!-- Question Input (2x2) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-orange-200 shadow-sm min-w-[750px]">
+                    <div class="step-badge inline-block mb-4">QUESTIONS</div>
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-1x2">
+                                <input type="number" id="eq2_a1" value="1" oninput="solve2x2()">
+                                <input type="number" id="eq2_a2" value="3" oninput="solve2x2()">
+                            </div>
+                        </div>
+                        <span class="italic text-base">x</span>
+                        <span class="text-lg font-black">+</span>
+
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-1x2">
+                                <input type="number" id="eq2_b1" value="2" oninput="solve2x2()">
+                                <input type="number" id="eq2_b2" value="-5" oninput="solve2x2()">
+                            </div>
+                        </div>
+                        <span class="italic text-base">y</span>
+                        <span class="text-lg font-black">=</span>
+
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-1x2">
+                                <input type="number" id="eq2_c1" value="4" oninput="solve2x2()">
+                                <input type="number" id="eq2_c2" value="1" oninput="solve2x2()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 1 (2x2) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-orange-200 shadow-sm min-w-[750px]">
+                    <div class="step-badge inline-block mb-3">Step 1 &nbsp; Convert the equation to matrix form</div>
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800 mb-2">
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="s1_2_a1">1</div>
+                                <div class="matrix-cell-white" id="s1_2_b1">2</div>
+                                <div class="matrix-cell-white" id="s1_2_a2">3</div>
+                                <div class="matrix-cell-white" id="s1_2_b2">-5</div>
+                            </div>
+                        </div>
+
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-1x2">
+                                <div class="matrix-cell-white"><i>x</i></div>
+                                <div class="matrix-cell-white"><i>y</i></div>
+                            </div>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-1x2">
+                                <div class="matrix-cell-white" id="s1_2_c1">4</div>
+                                <div class="matrix-cell-white" id="s1_2_c2">1</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-orange-950 font-black italic">A X = B &nbsp;&implies;&nbsp; X = A<sup>-1</sup> B</p>
+                </div>
+
+                <!-- Step 2 (2x2) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-orange-200 shadow-sm min-w-[750px]">
+                    <div class="step-badge inline-block mb-3">Step 2 &nbsp; Find the determinant of matrix A</div>
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
+                        <span class="text-orange-950 font-black">|A| =</span>
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-2x2">
+                                <div class="matrix-cell-white" id="s2_2_a1">1</div>
+                                <div class="matrix-cell-white" id="s2_2_b1">2</div>
+                                <div class="matrix-cell-white" id="s2_2_a2">3</div>
+                                <div class="matrix-cell-white" id="s2_2_b2">-5</div>
+                            </div>
+                        </div>
+                        <span class="text-lg font-black">=</span>
+                        <span class="underline-res" id="s2_2_det">-11</span>
+                    </div>
+                </div>
+
+                <!-- Step 3 (2x2) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-orange-200 shadow-sm min-w-[750px]">
+                    <div class="step-badge inline-block mb-3">Step 3 &nbsp; Find the determinant of matrix A<sub>1</sub></div>
+                    <div class="space-y-3 text-sm font-bold text-slate-800">
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-orange-950 font-black">A<sub>1</sub> =</span>
+                            <div class="matrix-bracket">
+                                <div class="matrix-grid g-2x2">
+                                    <div class="matrix-cell-white bg-amber-100 border-amber-600" id="s3_2_c1">4</div>
+                                    <div class="matrix-cell-white" id="s3_2_b1">2</div>
+                                    <div class="matrix-cell-white bg-amber-100 border-amber-600" id="s3_2_c2">1</div>
+                                    <div class="matrix-cell-white" id="s3_2_b2">-5</div>
+                                </div>
+                            </div>
+                            <div class="note-box-3d ml-2">
+                                <i class="fa-solid fa-arrow-left"></i> Replace the 1<sup>st</sup> column with Matrix B
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-orange-950 font-black">|A<sub>1</sub>| =</span>
+                            <span class="underline-res" id="s3_2_det1">-22</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 (2x2) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-orange-200 shadow-sm min-w-[750px]">
+                    <div class="step-badge inline-block mb-3">Step 4 &nbsp; Find the determinant of matrix A<sub>2</sub></div>
+                    <div class="space-y-3 text-sm font-bold text-slate-800">
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-orange-950 font-black">A<sub>2</sub> =</span>
+                            <div class="matrix-bracket">
+                                <div class="matrix-grid g-2x2">
+                                    <div class="matrix-cell-white" id="s4_2_a1">1</div>
+                                    <div class="matrix-cell-white bg-amber-100 border-amber-600" id="s4_2_c1">4</div>
+                                    <div class="matrix-cell-white" id="s4_2_a2">3</div>
+                                    <div class="matrix-cell-white bg-amber-100 border-amber-600" id="s4_2_c2">1</div>
+                                </div>
+                            </div>
+                            <div class="note-box-3d ml-2">
+                                <i class="fa-solid fa-arrow-left"></i> Replace the 2<sup>nd</sup> column with Matrix B
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-orange-950 font-black">|A<sub>2</sub>| =</span>
+                            <span class="underline-res" id="s4_2_det2">-11</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 (2x2) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-orange-200 shadow-sm min-w-[750px]">
+                    <div class="step-badge inline-block mb-3">Step 5 &nbsp; Find the value for all unknowns in matrix X</div>
+                    <div class="space-y-4 text-sm font-bold text-slate-800">
+                        <!-- Unknown x -->
+                        <div class="flex items-center gap-3">
+                            <span class="italic text-base w-6">x</span>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num">|A<sub>1</sub>|</span>
+                                <span class="den">|A|</span>
+                            </div>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num text-orange-600" id="s5_2_num_x">-22</span>
+                                <span class="den text-red-600" id="s5_2_den_x">-11</span>
+                            </div>
+                            <span>=</span>
+                            <span class="underline-res text-lg" id="s5_2_res_x">2</span>
+                        </div>
+
+                        <!-- Unknown y -->
+                        <div class="flex items-center gap-3">
+                            <span class="italic text-base w-6">y</span>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num">|A<sub>2</sub>|</span>
+                                <span class="den">|A|</span>
+                            </div>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num text-orange-600" id="s5_2_num_y">-11</span>
+                                <span class="den text-red-600" id="s5_2_den_y">-11</span>
+                            </div>
+                            <span>=</span>
+                            <span class="underline-res text-lg" id="s5_2_res_y">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKSYEN 2: CRAMER'S METHOD (3x3) -->
+        <section class="poster-card-indigo p-4 sm:p-6 mb-8">
+            <div class="poster-header-indigo p-3.5 rounded-2xl text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
+                    2
+                </div>
+                <div>
+                    <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
+                        CRAMER'S METHOD FOR : (3x3)
+                    </h3>
+                    <p class="text-[11px] text-blue-100 font-semibold">Penyelesaian Sistem 3 Persamaan Linear</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 overflow-x-auto pb-4">
+                <!-- Question Input (3x3) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-blue-200 shadow-sm min-w-[850px]">
+                    <div class="step-badge-blue inline-block mb-4">QUESTIONS</div>
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
+                        <!-- Column x -->
+                        <div class="border-2 border-slate-900 rounded-xl p-1 bg-yellow-300 shadow-sm">
+                            <div class="matrix-grid g-1x3">
+                                <input type="number" id="eq_a1" value="5" oninput="solveAll3x3()">
+                                <input type="number" id="eq_a2" value="-6" oninput="solveAll3x3()">
+                                <input type="number" id="eq_a3" value="7" oninput="solveAll3x3()">
+                            </div>
+                        </div>
+                        <span class="italic text-base">x</span>
+                        <span class="text-lg font-black">+</span>
+
+                        <!-- Column y -->
+                        <div class="border-2 border-slate-900 rounded-xl p-1 bg-yellow-300 shadow-sm">
+                            <div class="matrix-grid g-1x3">
+                                <input type="number" id="eq_b1" value="0" oninput="solveAll3x3()">
+                                <input type="number" id="eq_b2" value="4" oninput="solveAll3x3()">
+                                <input type="number" id="eq_b3" value="-9" oninput="solveAll3x3()">
+                            </div>
+                        </div>
+                        <span class="italic text-base">y</span>
+                        <span class="text-lg font-black">+</span>
+
+                        <!-- Column z -->
+                        <div class="border-2 border-slate-900 rounded-xl p-1 bg-yellow-300 shadow-sm">
+                            <div class="matrix-grid g-1x3">
+                                <input type="number" id="eq_c1" value="-3" oninput="solveAll3x3()">
+                                <input type="number" id="eq_c2" value="-2" oninput="solveAll3x3()">
+                                <input type="number" id="eq_c3" value="0" oninput="solveAll3x3()">
+                            </div>
+                        </div>
+                        <span class="italic text-base">z</span>
+                        <span class="text-lg font-black">=</span>
+
+                        <!-- Column constants B -->
+                        <div class="border-2 border-slate-900 rounded-xl p-1 bg-yellow-300 shadow-sm">
+                            <div class="matrix-grid g-1x3">
+                                <input type="number" id="eq_d1" value="18" oninput="solveAll3x3()">
+                                <input type="number" id="eq_d2" value="-8" oninput="solveAll3x3()">
+                                <input type="number" id="eq_d3" value="3" oninput="solveAll3x3()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 1 (3x3) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-blue-200 shadow-sm min-w-[850px]">
+                    <div class="step-badge-blue inline-block mb-3">Step 1 &nbsp; Convert the equation to matrix form</div>
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800 mb-2">
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-3x3">
+                                <div class="matrix-cell-white" id="s1_a1">5</div>
+                                <div class="matrix-cell-white" id="s1_b1">0</div>
+                                <div class="matrix-cell-white" id="s1_c1">-3</div>
+
+                                <div class="matrix-cell-white" id="s1_a2">-6</div>
+                                <div class="matrix-cell-white" id="s1_b2">4</div>
+                                <div class="matrix-cell-white" id="s1_c2">-2</div>
+
+                                <div class="matrix-cell-white" id="s1_a3">7</div>
+                                <div class="matrix-cell-white" id="s1_b3">-9</div>
+                                <div class="matrix-cell-white" id="s1_c3">0</div>
+                            </div>
+                        </div>
+
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-1x3">
+                                <div class="matrix-cell-white"><i>x</i></div>
+                                <div class="matrix-cell-white"><i>y</i></div>
+                                <div class="matrix-cell-white"><i>z</i></div>
+                            </div>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-1x3">
+                                <div class="matrix-cell-white" id="s1_d1">18</div>
+                                <div class="matrix-cell-white" id="s1_d2">-8</div>
+                                <div class="matrix-cell-white" id="s1_d3">3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-blue-900 font-black italic">A X = B &nbsp;&implies;&nbsp; X = A<sup>-1</sup> B</p>
+                </div>
+
+                <!-- Step 2 (3x3) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-blue-200 shadow-sm min-w-[850px]">
+                    <div class="step-badge-blue inline-block mb-3">Step 2 &nbsp; Find the determinant of matrix A</div>
+                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
+                        <span class="text-blue-950 font-black">|A| =</span>
+                        <div class="matrix-bracket">
+                            <div class="matrix-grid g-3x3">
+                                <div class="matrix-cell-white" id="s2_a1">5</div>
+                                <div class="matrix-cell-white" id="s2_b1">0</div>
+                                <div class="matrix-cell-white" id="s2_c1">-3</div>
+
+                                <div class="matrix-cell-white" id="s2_a2">-6</div>
+                                <div class="matrix-cell-white" id="s2_b2">4</div>
+                                <div class="matrix-cell-white" id="s2_c2">-2</div>
+
+                                <div class="matrix-cell-white" id="s2_a3">7</div>
+                                <div class="matrix-cell-white" id="s2_b3">-9</div>
+                                <div class="matrix-cell-white" id="s2_c3">0</div>
+                            </div>
+                        </div>
+
+                        <!-- Sarrus Duplicate Columns -->
+                        <div class="matrix-bracket bg-blue-50">
+                            <div class="grid grid-cols-2 gap-1" style="width: 84px; height: 90px;">
+                                <div class="matrix-cell-white" id="s2_a1_dup">5</div>
+                                <div class="matrix-cell-white" id="s2_b1_dup">0</div>
+                                <div class="matrix-cell-white" id="s2_a2_dup">-6</div>
+                                <div class="matrix-cell-white" id="s2_b2_dup">4</div>
+                                <div class="matrix-cell-white" id="s2_a3_dup">7</div>
+                                <div class="matrix-cell-white" id="s2_b3_dup">-9</div>
+                            </div>
+                        </div>
+
+                        <span class="text-lg font-black">=</span>
+                        <span class="underline-res" id="s2_det">-168</span>
+                    </div>
+                </div>
+
+                <!-- Step 3 (3x3 - A1) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-blue-200 shadow-sm min-w-[850px]">
+                    <div class="step-badge-blue inline-block mb-3">Step 3 &nbsp; Find the determinant of matrix A<sub>1</sub></div>
+                    <div class="space-y-3 text-sm font-bold text-slate-800">
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-blue-950 font-black">A<sub>1</sub> =</span>
+                            <div class="matrix-bracket">
+                                <div class="matrix-grid g-3x3">
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s3_d1">18</div>
+                                    <div class="matrix-cell-white" id="s3_b1">0</div>
+                                    <div class="matrix-cell-white" id="s3_c1">-3</div>
+
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s3_d2">-8</div>
+                                    <div class="matrix-cell-white" id="s3_b2">4</div>
+                                    <div class="matrix-cell-white" id="s3_c2">-2</div>
+
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s3_d3">3</div>
+                                    <div class="matrix-cell-white" id="s3_b3">-9</div>
+                                    <div class="matrix-cell-white" id="s3_c3">0</div>
+                                </div>
+                            </div>
+                            <div class="note-box-3d ml-2">
+                                <i class="fa-solid fa-arrow-left"></i> Replace the 1<sup>st</sup> column with Matrix B
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-blue-950 font-black">|A<sub>1</sub>| =</span>
+                            <span class="underline-res" id="s3_det1">-504</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 (3x3 - A2) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-blue-200 shadow-sm min-w-[850px]">
+                    <div class="step-badge-blue inline-block mb-3">Step 4 &nbsp; Find the determinant of matrix A<sub>2</sub></div>
+                    <div class="space-y-3 text-sm font-bold text-slate-800">
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-blue-950 font-black">A<sub>2</sub> =</span>
+                            <div class="matrix-bracket">
+                                <div class="matrix-grid g-3x3">
+                                    <div class="matrix-cell-white" id="s4_a1">5</div>
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s4_d1">18</div>
+                                    <div class="matrix-cell-white" id="s4_c1">-3</div>
+
+                                    <div class="matrix-cell-white" id="s4_a2">-6</div>
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s4_d2">-8</div>
+                                    <div class="matrix-cell-white" id="s4_c2">-2</div>
+
+                                    <div class="matrix-cell-white" id="s4_a3">7</div>
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s4_d3">3</div>
+                                    <div class="matrix-cell-white" id="s4_c3">0</div>
+                                </div>
+                            </div>
+                            <div class="note-box-3d ml-2">
+                                <i class="fa-solid fa-arrow-left"></i> Replace the 2<sup>nd</sup> column with Matrix B
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-blue-950 font-black">|A<sub>2</sub>| =</span>
+                            <span class="underline-res" id="s4_det2">-336</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 (3x3 - A3) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-blue-200 shadow-sm min-w-[850px]">
+                    <div class="step-badge-blue inline-block mb-3">Step 5 &nbsp; Find the determinant of matrix A<sub>3</sub></div>
+                    <div class="space-y-3 text-sm font-bold text-slate-800">
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-blue-950 font-black">A<sub>3</sub> =</span>
+                            <div class="matrix-bracket">
+                                <div class="matrix-grid g-3x3">
+                                    <div class="matrix-cell-white" id="s5_a1">5</div>
+                                    <div class="matrix-cell-white" id="s5_b1">0</div>
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s5_d1">18</div>
+
+                                    <div class="matrix-cell-white" id="s5_a2">-6</div>
+                                    <div class="matrix-cell-white" id="s5_b2">4</div>
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s5_d2">-8</div>
+
+                                    <div class="matrix-cell-white" id="s5_a3">7</div>
+                                    <div class="matrix-cell-white" id="s5_b3">-9</div>
+                                    <div class="matrix-cell-white bg-sky-100 border-sky-600" id="s5_d3">3</div>
+                                </div>
+                            </div>
+                            <div class="note-box-3d ml-2">
+                                <i class="fa-solid fa-arrow-left"></i> Replace the 3<sup>rd</sup> column with Matrix B
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="w-24 text-blue-950 font-black">|A<sub>3</sub>| =</span>
+                            <span class="underline-res" id="s5_det3">168</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6 (3x3 Unknowns) -->
+                <div class="bg-white/90 p-5 rounded-2xl border-2 border-blue-200 shadow-sm min-w-[850px]">
+                    <div class="step-badge-blue inline-block mb-3">Step 6 &nbsp; Find the value for all unknowns in matrix X</div>
+                    <div class="space-y-4 text-sm font-bold text-slate-800">
+                        <!-- Unknown x -->
+                        <div class="flex items-center gap-3">
+                            <span class="italic text-base w-6">x</span>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num">|A<sub>1</sub>|</span>
+                                <span class="den">|A|</span>
+                            </div>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num text-blue-700" id="s6_num_x">-504</span>
+                                <span class="den text-red-600" id="s6_den_x">-168</span>
+                            </div>
+                            <span>=</span>
+                            <span class="underline-res text-lg" id="s6_res_x">3</span>
+                        </div>
+
+                        <!-- Unknown y -->
+                        <div class="flex items-center gap-3">
+                            <span class="italic text-base w-6">y</span>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num">|A<sub>2</sub>|</span>
+                                <span class="den">|A|</span>
+                            </div>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num text-blue-700" id="s6_num_y">-336</span>
+                                <span class="den text-red-600" id="s6_den_y">-168</span>
+                            </div>
+                            <span>=</span>
+                            <span class="underline-res text-lg" id="s6_res_y">2</span>
+                        </div>
+
+                        <!-- Unknown z -->
+                        <div class="flex items-center gap-3">
+                            <span class="italic text-base w-6">z</span>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num">|A<sub>3</sub>|</span>
+                                <span class="den">|A|</span>
+                            </div>
+                            <span>=</span>
+                            <div class="fraction">
+                                <span class="num text-blue-700" id="s6_num_z">168</span>
+                                <span class="den text-red-600" id="s6_den_z">-168</span>
+                            </div>
+                            <span>=</span>
+                            <span class="underline-res text-lg" id="s6_res_z">-1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Topic Drawer Modal -->
+    <div id="topicsDrawer" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-white border-4 border-sky-300 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-lg font-black text-slate-800 flex items-center gap-2 font-display">
+                    <i class="fa-solid fa-list-check text-sky-600"></i> Senarai 6 Modul Utama
+                </h3>
+                <button onclick="toggleTopicsDrawer()" class="text-slate-400 hover:text-slate-600 font-bold">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-2 text-xs font-semibold">
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>1. Basic Operation (Addition & Subtraction)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 1</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>2. Basic Operation (Multiplication)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 2</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>3. Find - Determinant (2x2 & 3x3)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 3</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>4. Find - Minor, Cofactor & Adjoint</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 4</span>
+                </div>
+                <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
+                    <span>5. Inverse Method - (2x2) & (3x3)</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 5</span>
+                </div>
+                <div class="p-3 bg-orange-100 border-2 border-orange-400 rounded-xl flex items-center justify-between font-bold text-orange-950">
+                    <span>6. Cramer's Method - (2x2) & (3x3)</span>
+                    <span class="bg-orange-600 text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Sedang Dibuka</span>
+                </div>
+            </div>
+            <div class="pt-2 text-right">
+                <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2 rounded-xl text-white font-bold text-xs">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT AUTO-CALCULATION -->
+    <script>
+        function getV(id) {
+            let el = document.getElementById(id);
+            if (!el) return 0;
+            let v = parseFloat(el.value);
+            return isNaN(v) ? 0 : v;
+        }
+
+        function setT(id, val) {
+            let el = document.getElementById(id);
+            if (el) el.innerText = val;
+        }
+
+        /* 2x2 CRAMER'S RULE */
+        function solve2x2() {
+            let a1 = getV('eq2_a1'), a2 = getV('eq2_a2');
+            let b1 = getV('eq2_b1'), b2 = getV('eq2_b2');
+            let c1 = getV('eq2_c1'), c2 = getV('eq2_c2');
+
+            // Step 1: Matrix Form
+            setT('s1_2_a1', a1); setT('s1_2_a2', a2);
+            setT('s1_2_b1', b1); setT('s1_2_b2', b2);
+            setT('s1_2_c1', c1); setT('s1_2_c2', c2);
+
+            // Step 2: Determinant A
+            setT('s2_2_a1', a1); setT('s2_2_a2', a2);
+            setT('s2_2_b1', b1); setT('s2_2_b2', b2);
+            let detA = (a1 * b2) - (b1 * a2);
+            setT('s2_2_det', detA);
+
+            // Step 3: Matrix A1 & Det A1
+            setT('s3_2_c1', c1); setT('s3_2_c2', c2);
+            setT('s3_2_b1', b1); setT('s3_2_b2', b2);
+            let detA1 = (c1 * b2) - (b1 * c2);
+            setT('s3_2_det1', detA1);
+
+            // Step 4: Matrix A2 & Det A2
+            setT('s4_2_a1', a1); setT('s4_2_a2', a2);
+            setT('s4_2_c1', c1); setT('s4_2_c2', c2);
+            let detA2 = (a1 * c2) - (c1 * a2);
+            setT('s4_2_det2', detA2);
+
+            // Step 5: Values x and y
+            setT('s5_2_num_x', detA1); setT('s5_2_den_x', detA);
+            setT('s5_2_num_y', detA2); setT('s5_2_den_y', detA);
+
+            let ansX = detA !== 0 ? (detA1 / detA) : 0;
+            let ansY = detA !== 0 ? (detA2 / detA) : 0;
+
+            setT('s5_2_res_x', Number.isInteger(ansX) ? ansX : ansX.toFixed(2));
+            setT('s5_2_res_y', Number.isInteger(ansY) ? ansY : ansY.toFixed(2));
+        }
+
+        /* 3x3 CRAMER'S RULE */
+        function solveAll3x3() {
+            let a1 = getV('eq_a1'), a2 = getV('eq_a2'), a3 = getV('eq_a3');
+            let b1 = getV('eq_b1'), b2 = getV('eq_b2'), b3 = getV('eq_b3');
+            let c1 = getV('eq_c1'), c2 = getV('eq_c2'), c3 = getV('eq_c3');
+            let d1 = getV('eq_d1'), d2 = getV('eq_d2'), d3 = getV('eq_d3');
+
+            // Step 1: Matrix Form
+            setT('s1_a1', a1); setT('s1_a2', a2); setT('s1_a3', a3);
+            setT('s1_b1', b1); setT('s1_b2', b2); setT('s1_b3', b3);
+            setT('s1_c1', c1); setT('s1_c2', c2); setT('s1_c3', c3);
+            setT('s1_d1', d1); setT('s1_d2', d2); setT('s1_d3', d3);
+
+            // Helper for 3x3 Determinant (Sarrus Rule)
+            function calcDet3x3(col1_1, col1_2, col1_3, col2_1, col2_2, col2_3, col3_1, col3_2, col3_3) {
+                let pos = (col1_1 * col2_2 * col3_3) + (col2_1 * col3_2 * col1_3) + (col3_1 * col1_2 * col2_3);
+                let neg = (col3_1 * col2_2 * col1_3) + (col1_1 * col3_2 * col2_3) + (col2_1 * col1_2 * col3_3);
+                return pos - neg;
+            }
+
+            // Step 2: Det A
+            setT('s2_a1', a1); setT('s2_a2', a2); setT('s2_a3', a3);
+            setT('s2_b1', b1); setT('s2_b2', b2); setT('s2_b3', b3);
+            setT('s2_c1', c1); setT('s2_c2', c2); setT('s2_c3', c3);
+
+            setT('s2_a1_dup', a1); setT('s2_a2_dup', a2); setT('s2_a3_dup', a3);
+            setT('s2_b1_dup', b1); setT('s2_b2_dup', b2); setT('s2_b3_dup', b3);
+
+            let detA = calcDet3x3(a1, a2, a3, b1, b2, b3, c1, c2, c3);
+            setT('s2_det', detA);
+
+            // Step 3: Det A1 (Replace Col 1 with B)
+            setT('s3_d1', d1); setT('s3_d2', d2); setT('s3_d3', d3);
+            setT('s3_b1', b1); setT('s3_b2', b2); setT('s3_b3', b3);
+            setT('s3_c1', c1); setT('s3_c2', c2); setT('s3_c3', c3);
+
+            let detA1 = calcDet3x3(d1, d2, d3, b1, b2, b3, c1, c2, c3);
+            setT('s3_det1', detA1);
+
+            // Step 4: Det A2 (Replace Col 2 with B)
+            setT('s4_a1', a1); setT('s4_a2', a2); setT('s4_a3', a3);
+            setT('s4_d1', d1); setT('s4_d2', d2); setT('s4_d3', d3);
+            setT('s4_c1', c1); setT('s4_c2', c2); setT('s4_c3', c3);
+
+            let detA2 = calcDet3x3(a1, a2, a3, d1, d2, d3, c1, c2, c3);
+            setT('s4_det2', detA2);
+
+            // Step 5: Det A3 (Replace Col 3 with B)
+            setT('s5_a1', a1); setT('s5_a2', a2); setT('s5_a3', a3);
+            setT('s5_b1', b1); setT('s5_b2', b2); setT('s5_b3', b3);
+            setT('s5_d1', d1); setT('s5_d2', d2); setT('s5_d3', d3);
+
+            let detA3 = calcDet3x3(a1, a2, a3, b1, b2, b3, d1, d2, d3);
+            setT('s5_det3', detA3);
+
+            // Step 6: Unknowns x, y, z
+            setT('s6_num_x', detA1); setT('s6_den_x', detA);
+            setT('s6_num_y', detA2); setT('s6_den_y', detA);
+            setT('s6_num_z', detA3); setT('s6_den_z', detA);
+
+            let ansX = detA !== 0 ? (detA1 / detA) : 0;
+            let ansY = detA !== 0 ? (detA2 / detA) : 0;
+            let ansZ = detA !== 0 ? (detA3 / detA) : 0;
+
+            setT('s6_res_x', Number.isInteger(ansX) ? ansX : ansX.toFixed(2));
+            setT('s6_res_y', Number.isInteger(ansY) ? ansY : ansY.toFixed(2));
+            setT('s6_res_z', Number.isInteger(ansZ) ? ansZ : ansZ.toFixed(2));
+        }
+
+        function toggleTopicsDrawer() {
+            document.getElementById('topicsDrawer').classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            solve2x2();
+            solveAll3x3();
+        });
+    </script>
+</body>
+</html>

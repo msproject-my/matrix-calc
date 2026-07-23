@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub Pembelajaran Matriks Interaktif 3D - GitHub Ready</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBlue: '#0284c7',
+                        brandDarkBlue: '#1e3a8a',
+                        brandYellow: '#f59e0b',
+                        brandRed: '#ef4444',
+                        brandGreen: '#10b981',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fredoka', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- KaTeX Math Renderer -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 50%, #0369a1 100%);
+            min-height: 100vh;
+            color: #0f172a;
+        }
+
+        /* 3D Extruded Text effect inspired by poster */
+        .text-3d-yellow {
+            color: #facc15;
+            text-shadow: 
+                2px 2px 0px #b45309,
+                4px 4px 0px #78350f,
+                6px 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        .text-3d-white {
+            color: #ffffff;
+            text-shadow: 
+                2px 2px 0px #1e3a8a,
+                4px 4px 0px #0f172a,
+                6px 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Claymorphism 3D Containers */
+        .clay-card {
+            background: #ffffff;
+            border: 4px solid #38bdf8;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #0284c7, 0 15px 25px rgba(0,0,0,0.25);
+            transition: all 0.2s ease;
+        }
+        .clay-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 0 #0284c7, 0 20px 30px rgba(0,0,0,0.3);
+        }
+
+        .clay-card-green {
+            background: #ffffff;
+            border: 4px solid #34d399;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #059669, 0 15px 25px rgba(0,0,0,0.25);
+            transition: all 0.2s ease;
+        }
+        .clay-card-green:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 0 #059669, 0 20px 30px rgba(0,0,0,0.3);
+        }
+
+        .clay-card-amber {
+            background: #ffffff;
+            border: 4px solid #fbbf24;
+            border-radius: 1.75rem;
+            box-shadow: 0 12px 0 #d97706, 0 15px 25px rgba(0,0,0,0.25);
+            transition: all 0.2s ease;
+        }
+        .clay-card-amber:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 0 #d97706, 0 20px 30px rgba(0,0,0,0.3);
+        }
+
+        /* 3D Glossy Buttons */
+        .btn-3d-blue {
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            border-bottom: 5px solid #0369a1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-blue:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-3d-red {
+            background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+            border-bottom: 5px solid #991b1b;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-red:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        .btn-3d-green {
+            background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+            border-bottom: 5px solid #047857;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-green:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        .btn-3d-dark {
+            background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
+            border-bottom: 5px solid #0f172a;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-dark:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        /* Number Badges */
+        .badge-number {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            font-weight: 800;
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0f2fe;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
+
+    <!-- Top Header Banner -->
+    <header class="max-w-6xl mx-auto pt-6 px-4">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/95 backdrop-blur-md rounded-3xl p-4 border-4 border-sky-200 shadow-xl">
+            <!-- Left Logo & Branding -->
+            <div class="flex items-center gap-3">
+                <div class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-sky-400 rounded-2xl border-4 border-white shadow-md flex items-center justify-center text-white font-extrabold text-2xl tracking-tighter">
+                    [M]
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-red-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow-sm tracking-wide">MODUL SESI 2026/2027</span>
+                        <span class="bg-sky-100 text-sky-800 text-[11px] font-bold px-2 py-0.5 rounded-full border border-sky-300"><i class="fa-brands fa-github text-slate-800"></i> GitHub Pages Ready</span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight leading-tight">
+                        PORTAL UTAMA PEMBELAJARAN MATRIKS
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Quick Action Links -->
+            <div class="flex items-center gap-2">
+                <button onclick="openOverviewModal()" class="btn-3d-blue px-4 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-code font-bold"></i> Senarai Fail HTML Topik
+                </button>
+                <button onclick="scrollToGrid()" class="btn-3d-green px-4 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group"></i> Modul Topik
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main View Page Container -->
+    <div id="mainPageView" class="block">
+        <!-- Hero Banner with 3D Extruded Title & Infographic Style -->
+        <main class="max-w-6xl mx-auto px-4 mt-6">
+            <section class="relative bg-gradient-to-b from-sky-400 to-blue-600 rounded-3xl p-6 sm:p-10 border-4 border-white shadow-2xl overflow-hidden mb-10 text-center">
+                <!-- Floating Decorative 3D Stars/Icons -->
+                <div class="absolute top-4 left-6 text-yellow-300 text-3xl animate-bounce pointer-events-none drop-shadow-md">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="absolute bottom-4 right-8 text-yellow-300 text-4xl animate-pulse pointer-events-none drop-shadow-md">
+                    <i class="fa-solid fa-shapes"></i>
+                </div>
+                <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-3xl mx-auto">
+                    <!-- Red Pill Header Badge -->
+                    <div class="inline-block bg-gradient-to-r from-red-600 to-rose-500 text-white font-black text-xs sm:text-sm px-6 py-2 rounded-full border-2 border-white shadow-lg mb-3 tracking-widest uppercase">
+                        KURSUS MATEMATIK MATRIKS LENGKAP
+                    </div>
+
+                    <!-- 3D Extruded Big Title -->
+                    <h2 class="text-3xl sm:text-5xl font-black font-display tracking-wide mb-3 text-3d-yellow">
+                        AGIHAN METHOD MATRIKS
+                    </h2>
+
+                    <p class="text-white text-sm sm:text-base font-semibold leading-relaxed bg-blue-900/40 p-4 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
+                        Pilih sebarang kaedah di bawah untuk membuka **Langkah Pengiraan Interaktif** atau tekan butang **Fail Kod HTML** untuk masuk ke halaman paparan kod khas setiap topik.
+                    </p>
+
+                    <!-- Quick Stats Badge Bar -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 max-w-2xl mx-auto text-left">
+                        <div class="bg-white/95 rounded-2xl p-3 border-2 border-sky-200 shadow-md flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-inner">
+                                6
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-500 font-bold block uppercase">Topik Utama</span>
+                                <span class="text-xs font-black text-slate-800">Silibus Teragih</span>
+                            </div>
+                        </div>
+                        <div class="bg-white/95 rounded-2xl p-3 border-2 border-sky-200 shadow-md flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-lg shadow-inner">
+                                <i class="fa-solid fa-file-code"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-500 font-bold block uppercase">Fail HTML</span>
+                                <span class="text-xs font-black text-slate-800">Laman Kod Khas</span>
+                            </div>
+                        </div>
+                        <div class="bg-white/95 rounded-2xl p-3 border-2 border-sky-200 shadow-md flex items-center gap-3 col-span-2 sm:col-span-1">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg shadow-inner">
+                                2x2 & 3x3
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-500 font-bold block uppercase">Peringkat Matriks</span>
+                                <span class="text-xs font-black text-slate-800">Semua Dimensi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main 6 Matrix Topics Section -->
+            <section id="topicsGridSection" class="scroll-mt-6">
+                <div class="flex items-center justify-between mb-6 bg-white/80 backdrop-blur-md p-4 rounded-2xl border-2 border-sky-200 shadow-sm">
+                    <div>
+                        <h3 class="text-xl font-black text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-boxes-stacked text-blue-600"></i> SENARAI 6 MODUL UTAMA
+                        </h3>
+                        <p class="text-xs text-slate-600 font-medium">Tekan pada modul untuk simulasi atau tekan butang kod HTML untuk membuka halaman kod topik berkenaan.</p>
+                    </div>
+                    <span class="bg-blue-600 text-white text-xs font-black px-3 py-1 rounded-full shadow">
+                        6 Modul Teragih
+                    </span>
+                </div>
+
+                <!-- Grid Display for 6 Points -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Point 1: Basic Operation (Addition & Subtraction) -->
+                    <div class="clay-card p-6 flex flex-col justify-between relative group">
+                        <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
+                            1
+                        </div>
+                        <div>
+                            <div class="inline-block bg-sky-100 text-sky-800 text-[11px] font-black px-3 py-1 rounded-full border border-sky-300 mb-3">
+                                OPERASI ASAS
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-2xl shadow-md group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-plus-minus"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-slate-800 text-lg leading-snug">
+                                        Basic Operation (Addition & Subtraction)
+                                    </h4>
+                                    <p class="text-xs text-slate-500 font-semibold mt-1">Penambahan & Penolakan Matriks</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                Menambah dan menolak unsur sepadan bagi dua matriks yang mempunyai peringkat/saiz dimensi yang sama $(m \times n)$.
+                            </p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="openTopicModal(0)" class="btn-3d-blue px-3 py-2 rounded-xl text-white font-bold text-xs flex-1">
+                                <i class="fa-solid fa-play"></i> Modul
+                            </button>
+                            <button onclick="openCodePage(0)" class="btn-3d-dark px-3 py-2 rounded-xl text-white font-bold text-xs flex-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-code"></i> Fail HTML
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Point 2: Basic Operation (Multiplication) -->
+                    <div class="clay-card p-6 flex flex-col justify-between relative group">
+                        <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
+                            2
+                        </div>
+                        <div>
+                            <div class="inline-block bg-sky-100 text-sky-800 text-[11px] font-black px-3 py-1 rounded-full border border-sky-300 mb-3">
+                                OPERASI ASAS
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-2xl shadow-md group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-slate-800 text-lg leading-snug">
+                                        Basic Operation (Multiplication)
+                                    </h4>
+                                    <p class="text-xs text-slate-500 font-semibold mt-1">Pendaraban Matriks (Baris × Lajur)</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                Pendaraban matriks $AB$ dengan syarat bilangan lajur matriks $A$ sama dengan bilangan baris matriks $B$.
+                            </p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="openTopicModal(1)" class="btn-3d-blue px-3 py-2 rounded-xl text-white font-bold text-xs flex-1">
+                                <i class="fa-solid fa-play"></i> Modul
+                            </button>
+                            <button onclick="openCodePage(1)" class="btn-3d-dark px-3 py-2 rounded-xl text-white font-bold text-xs flex-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-code"></i> Fail HTML
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Point 3: Find - Determinant -->
+                    <div class="clay-card-green p-6 flex flex-col justify-between relative group">
+                        <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
+                            3
+                        </div>
+                        <div>
+                            <div class="inline-block bg-emerald-100 text-emerald-800 text-[11px] font-black px-3 py-1 rounded-full border border-emerald-300 mb-3">
+                                PENENTU (DETERMINANT)
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold text-2xl shadow-md group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-border-all"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-slate-800 text-lg leading-snug">
+                                        Find - Determinant
+                                    </h4>
+                                    <p class="text-xs text-slate-500 font-semibold mt-1">Penentu Matriks $|A|$ (2x2 & 3x3)</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                Pengiraan nilai penentu skalar $|A|$ menggunakan kaedah $ad - bc$ (2x2) atau Petua Sarrus / Kembangan Kofaktor (3x3).
+                            </p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="openTopicModal(2)" class="btn-3d-green px-3 py-2 rounded-xl text-white font-bold text-xs flex-1">
+                                <i class="fa-solid fa-play"></i> Modul
+                            </button>
+                            <button onclick="openCodePage(2)" class="btn-3d-dark px-3 py-2 rounded-xl text-white font-bold text-xs flex-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-code"></i> Fail HTML
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Point 4: Find - Minor, Cofactor & Adjoint -->
+                    <div class="clay-card-green p-6 flex flex-col justify-between relative group">
+                        <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
+                            4
+                        </div>
+                        <div>
+                            <div class="inline-block bg-emerald-100 text-emerald-800 text-[11px] font-black px-3 py-1 rounded-full border border-emerald-300 mb-3">
+                                ANALISIS MATRIKS
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center font-bold text-2xl shadow-md group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-sitemap"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-slate-800 text-lg leading-snug">
+                                        Find - Minor, Cofactor & Adjoint
+                                    </h4>
+                                    <p class="text-xs text-slate-500 font-semibold mt-1">Minor ($M_{ij}$), Kofaktor ($C_{ij}$) & Adjung</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                Menentukan sub-penentu Minor $M_{ij}$, matriks Kofaktor $C_{ij} = (-1)^{i+j}M_{ij}$ dan Adjung $\text{adj}(A) = C^T$.
+                            </p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="openTopicModal(3)" class="btn-3d-green px-3 py-2 rounded-xl text-white font-bold text-xs flex-1">
+                                <i class="fa-solid fa-play"></i> Modul
+                            </button>
+                            <button onclick="openCodePage(3)" class="btn-3d-dark px-3 py-2 rounded-xl text-white font-bold text-xs flex-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-code"></i> Fail HTML
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Point 5: Inverse Method - (2x2) & (3x3) -->
+                    <div class="clay-card-amber p-6 flex flex-col justify-between relative group">
+                        <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
+                            5
+                        </div>
+                        <div>
+                            <div class="inline-block bg-amber-100 text-amber-800 text-[11px] font-black px-3 py-1 rounded-full border border-amber-300 mb-3">
+                                MATRIKS SONGSANG
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-2xl shadow-md group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-slate-800 text-lg leading-snug">
+                                        Inverse Method - (2x2) & (3x3)
+                                    </h4>
+                                    <p class="text-xs text-slate-500 font-semibold mt-1">Kaedah Matriks Songsang $A^{-1}$</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                Carian $A^{-1} = \frac{1}{|A|}\text{adj}(A)$ dengan semakan kewujudan di mana penentu $|A| \neq 0$.
+                            </p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="openTopicModal(4)" class="btn-3d-blue px-3 py-2 rounded-xl text-white font-bold text-xs flex-1">
+                                <i class="fa-solid fa-play"></i> Modul
+                            </button>
+                            <button onclick="openCodePage(4)" class="btn-3d-dark px-3 py-2 rounded-xl text-white font-bold text-xs flex-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-code"></i> Fail HTML
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Point 6: Cramer's Method - (2x2) & (3x3) -->
+                    <div class="clay-card-amber p-6 flex flex-col justify-between relative group">
+                        <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
+                            6
+                        </div>
+                        <div>
+                            <div class="inline-block bg-amber-100 text-amber-800 text-[11px] font-black px-3 py-1 rounded-full border border-amber-300 mb-3">
+                                PETUA CRAMER
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center font-bold text-2xl shadow-md group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-sliders"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-slate-800 text-lg leading-snug">
+                                        Cramer's Method - (2x2) & (3x3)
+                                    </h4>
+                                    <p class="text-xs text-slate-500 font-semibold mt-1">Penyelesaian Persamaan Linear</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                Penyelesaian sistem persamaan $AX = B$ menggunakan nisbah penentu $x = \frac{|A_x|}{|A|}, y = \frac{|A_y|}{|A|}, z = \frac{|A_z|}{|A|}$.
+                            </p>
+                        </div>
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="openTopicModal(5)" class="btn-3d-blue px-3 py-2 rounded-xl text-white font-bold text-xs flex-1">
+                                <i class="fa-solid fa-play"></i> Modul
+                            </button>
+                            <button onclick="openCodePage(5)" class="btn-3d-dark px-3 py-2 rounded-xl text-white font-bold text-xs flex-1 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-code"></i> Fail HTML
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- DEDICATED PAGE VIEW: HTML CODE DISPLAY PAGE (Hidden by default, shown when clicking HTML Code button) -->
+    <div id="codeDisplayPageView" class="hidden max-w-5xl mx-auto px-4 mt-6">
+        <div class="bg-white border-4 border-sky-300 rounded-3xl p-6 shadow-2xl space-y-6">
+            <!-- Header bar -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="closeCodePage()" class="btn-3d-red px-3 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali
+                    </button>
+                    <div>
+                        <span id="codePageBadge" class="text-[10px] bg-blue-100 text-blue-800 font-black px-2.5 py-0.5 rounded-full border border-blue-300">
+                            FAIL KOD HTML
+                        </span>
+                        <h2 id="codePageTitle" class="text-xl font-black text-slate-800 mt-0.5">
+                            Nama Fail HTML
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button onclick="copyCodeFromPage()" class="btn-3d-green px-4 py-2 rounded-xl text-white font-bold text-xs flex-1 sm:flex-none flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> Salin Kod
+                    </button>
+                    <button onclick="downloadCodeFromPage()" class="btn-3d-blue px-4 py-2 rounded-xl text-white font-bold text-xs flex-1 sm:flex-none flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-download"></i> Muat Turun .html
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code display area -->
+            <div class="relative">
+                <div class="flex items-center justify-between bg-slate-800 text-slate-300 px-4 py-2 rounded-t-2xl font-mono text-xs">
+                    <span id="codePageFileName" class="text-emerald-400 font-bold">1_addition_subtraction.html</span>
+                    <span class="text-[10px] text-slate-400"><i class="fa-solid fa-code"></i> Standalone HTML Code</span>
+                </div>
+                <textarea id="mainCodeArea" readonly rows="18" class="w-full bg-slate-900 text-emerald-400 font-mono text-xs p-4 rounded-b-2xl border-x-2 border-b-2 border-slate-800 focus:outline-none custom-scrollbar select-all"></textarea>
+            </div>
+
+            <p class="text-xs text-slate-500 italic bg-amber-50 p-3 rounded-xl border border-amber-200">
+                💡 **Petunjuk:** Anda boleh menekan butang **"Muat Turun .html"** di atas untuk terus menyimpan fail ini di dalam komputer anda atau tekan **"Salin Kod"** untuk menampalnya (*paste*) ke dalam sebarang editor pilihan anda.
+            </p>
+        </div>
+    </div>
+
+    <!-- Topic Detail Modal Container -->
+    <div id="topicModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 hidden">
+        <div class="bg-white border-4 border-sky-300 rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 bg-gradient-to-r from-blue-600 to-sky-500 text-white flex items-center justify-between border-b-4 border-sky-200">
+                <div class="flex items-center gap-3">
+                    <div id="modalTopicBadgeNum" class="w-10 h-10 bg-white text-blue-700 rounded-2xl flex items-center justify-center font-black text-xl shadow-md">
+                        1
+                    </div>
+                    <div>
+                        <span id="modalTopicCategory" class="text-[10px] bg-yellow-400 text-slate-900 font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                            KATEGORI
+                        </span>
+                        <h3 id="modalTopicTitle" class="text-base sm:text-xl font-black text-white leading-tight mt-0.5">
+                            Tajuk Modul
+                        </h3>
+                    </div>
+                </div>
+                <button onclick="closeTopicModal()" class="w-10 h-10 rounded-2xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition border border-white/40">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-4 sm:p-6 overflow-y-auto flex-grow custom-scrollbar space-y-6">
+                <!-- Concept & Formulas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-sky-50 border-2 border-sky-200 p-4 rounded-2xl">
+                        <h4 class="text-xs font-black uppercase tracking-wider text-sky-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i> Konsep Utama
+                        </h4>
+                        <p id="modalConceptText" class="text-xs text-slate-700 leading-relaxed font-medium">
+                            Penerangan konsep...
+                        </p>
+                    </div>
+                    <div class="bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl">
+                        <h4 class="text-xs font-black uppercase tracking-wider text-indigo-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-square-root-variable text-indigo-600"></i> Formula Utama
+                        </h4>
+                        <div id="modalFormulaBox" class="bg-white p-3 rounded-xl border border-indigo-200 text-center font-mono text-sm min-h-[50px] flex items-center justify-center">
+                            Formula KaTeX...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Steps Procedure -->
+                <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200">
+                    <h4 class="text-xs font-black uppercase tracking-wider text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol text-blue-600"></i> Langkah Kerja Sistematis
+                    </h4>
+                    <ol id="modalStepsList" class="space-y-2 text-xs text-slate-700 font-medium">
+                        <!-- Dynamic steps -->
+                    </ol>
+                </div>
+
+                <!-- Live Example & Interactive Simulator -->
+                <div class="bg-emerald-50 border-2 border-emerald-200 p-4 sm:p-5 rounded-2xl">
+                    <h4 class="text-xs font-black uppercase tracking-wider text-emerald-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-emerald-600"></i> Contoh & Simulasi Pengiraan Matriks Live
+                    </h4>
+                    <div id="modalSimulatorContainer" class="bg-white p-4 rounded-xl border border-emerald-300 font-mono text-xs space-y-3">
+                        <!-- Dynamic Interactive Matrix Inputs & Solutions -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 bg-slate-100 border-t border-slate-200 flex items-center justify-between">
+                <button id="modalOpenCodeBtn" onclick="" class="btn-3d-dark px-4 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-code"></i> Buka Halaman Kod HTML Topik Ini
+                </button>
+                <button onclick="closeTopicModal()" class="btn-3d-red px-5 py-2 rounded-xl text-white font-bold text-xs">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview Modal (All 6 Topic Codes Quick Menu) -->
+    <div id="overviewModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-white border-4 border-sky-300 rounded-3xl max-w-2xl w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b pb-3 mb-4">
+                <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-folder-tree text-blue-600"></i> Fail Kod HTML Setiap Topik
+                </h3>
+                <button onclick="closeOverviewModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-600 mb-4 font-medium">
+                Pilih topik di bawah untuk terus melawat **Halaman Paparan Kod HTML** khusus bagi fail berkenaan:
+            </p>
+            <div class="space-y-2 text-xs">
+                <div onclick="closeOverviewModal(); openCodePage(0);" class="p-3 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 flex items-center justify-between cursor-pointer font-bold text-slate-800 transition">
+                    <span>1. Basic Operation (Addition & Subtraction)</span>
+                    <span class="font-mono text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded border border-blue-200">1_addition_subtraction.html</span>
+                </div>
+                <div onclick="closeOverviewModal(); openCodePage(1);" class="p-3 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 flex items-center justify-between cursor-pointer font-bold text-slate-800 transition">
+                    <span>2. Basic Operation (Multiplication)</span>
+                    <span class="font-mono text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded border border-indigo-200">2_multiplication.html</span>
+                </div>
+                <div onclick="closeOverviewModal(); openCodePage(2);" class="p-3 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 flex items-center justify-between cursor-pointer font-bold text-slate-800 transition">
+                    <span>3. Find - Determinant (2x2 & 3x3)</span>
+                    <span class="font-mono text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">3_determinant.html</span>
+                </div>
+                <div onclick="closeOverviewModal(); openCodePage(3);" class="p-3 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 flex items-center justify-between cursor-pointer font-bold text-slate-800 transition">
+                    <span>4. Find - Minor, Cofactor & Adjoint</span>
+                    <span class="font-mono text-[10px] bg-teal-100 text-teal-800 px-2 py-0.5 rounded border border-teal-200">4_minor_cofactor_adjoint.html</span>
+                </div>
+                <div onclick="closeOverviewModal(); openCodePage(4);" class="p-3 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 flex items-center justify-between cursor-pointer font-bold text-slate-800 transition">
+                    <span>5. Inverse Method - (2x2) & (3x3)</span>
+                    <span class="font-mono text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded border border-amber-200">5_inverse.html</span>
+                </div>
+                <div onclick="closeOverviewModal(); openCodePage(5);" class="p-3 rounded-xl bg-slate-50 hover:bg-sky-50 border border-slate-200 flex items-center justify-between cursor-pointer font-bold text-slate-800 transition">
+                    <span>6. Cramer's Method - (2x2) & (3x3)</span>
+                    <span class="font-mono text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded border border-rose-200">6_cramer.html</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast Box -->
+    <div id="toastBox" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border-2 border-emerald-400 font-bold text-xs flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toastMsg">Mesej Notifikasi</span>
+    </div>
+
+    <script>
+        // Data for all 6 Topic Modules
+        const topicsData = [
+            {
+                id: 1,
+                fileName: '1_addition_subtraction.html',
+                category: 'OPERASI ASAS',
+                title: 'Basic Operation (Addition & Subtraction)',
+                concept: 'Penambahan dan penolakan matriks hanya boleh dilaksanakan jika kedua-dua matriks mempunyai dimensi/peringkat yang sama (sama bilangan baris & lajur). Penambahan/penolakan dilakukan secara terus pada unsur yang sepadan.',
+                formula: 'A_{m \\times n} \\pm B_{m \\times n} = [a_{ij} \\pm b_{ij}]',
+                steps: [
+                    'Semak peringkat kedua-dua matriks (mesti sama, contoh 2x2 dengan 2x2).',
+                    'Padankan unsur di kedudukan yang sama (contoh: baris 1 lajur 1 dengan baris 1 lajur 1).',
+                    'Lakukan operasi tambah atau tolak bagi setiap pasangan unsur sepadan tersebut.'
+                ],
+                renderSim: function() {
+                    return `
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between bg-slate-100 p-2 rounded-lg">
+                                <span class="font-bold text-slate-700">Pilih Operasi:</span>
+                                <select id="opType1" onchange="runSim1()" class="bg-white border rounded px-2 py-1 font-bold">
+                                    <option value="add">Tambah (A + B)</option>
+                                    <option value="sub">Tolak (A - B)</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <span class="block text-slate-600 font-bold mb-1">Matriks A:</span>
+                                    <div class="grid grid-cols-2 gap-1 max-w-[140px]">
+                                        <input type="number" id="s1_a11" value="3" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s1_a12" value="5" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s1_a21" value="1" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s1_a22" value="4" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-600 font-bold mb-1">Matriks B:</span>
+                                    <div class="grid grid-cols-2 gap-1 max-w-[140px]">
+                                        <input type="number" id="s1_b11" value="2" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s1_b12" value="-1" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s1_b21" value="0" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s1_b22" value="3" oninput="runSim1()" class="p-1 border rounded text-center font-bold">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sim1Result" class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-900 font-bold"></div>
+                        </div>
+                    `;
+                }
+            },
+            {
+                id: 2,
+                fileName: '2_multiplication.html',
+                category: 'OPERASI ASAS',
+                title: 'Basic Operation (Multiplication)',
+                concept: 'Pendaraban dua matriks AB wujud hanya jika bilangan lajur matriks pertama A sama dengan bilangan baris matriks kedua B. Setiap unsur dalam hasil darab diperolehi daripada darab bintik (dot product) baris A dengan lajur B.',
+                formula: '(m \\times n) \\times (n \\times p) = (m \\times p)',
+                steps: [
+                    'Semak lajur A = baris B (contoh: 2x2 x 2x2 = 2x2).',
+                    'Darabkan unsur baris 1 A dengan lajur 1 B dan jumlahkan untuk c11.',
+                    'Ulangi bagi semua kombinasi baris dan lajur.'
+                ],
+                renderSim: function() {
+                    return `
+                        <div class="space-y-4">
+                            <p class="text-slate-600">Hasil Darab Matriks A (2x2) × B (2x2):</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <span class="block text-slate-600 font-bold mb-1">Matriks A:</span>
+                                    <div class="grid grid-cols-2 gap-1 max-w-[140px]">
+                                        <input type="number" id="s2_a11" value="1" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s2_a12" value="2" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s2_a21" value="3" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s2_a22" value="4" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-600 font-bold mb-1">Matriks B:</span>
+                                    <div class="grid grid-cols-2 gap-1 max-w-[140px]">
+                                        <input type="number" id="s2_b11" value="2" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s2_b12" value="0" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s2_b21" value="1" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                        <input type="number" id="s2_b22" value="3" oninput="runSim2()" class="p-1 border rounded text-center font-bold">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sim2Result" class="p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-900 font-bold"></div>
+                        </div>
+                    `;
+                }
+            },
+            {
+                id: 3,
+                fileName: '3_determinant.html',
+                category: 'PENENTU (DETERMINANT)',
+                title: 'Find - Determinant (2x2 & 3x3)',
+                concept: 'Penentu matriks ialah nilai skalar bernombor tunggal yang menggambarkan sifat matriks segi empat sama. Jika penentu |A| = 0, matriks itu dipanggil matriks tunggal (singular).',
+                formula: '\\det \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc',
+                steps: [
+                    'Bagi Matriks 2x2: Kira pepenjuru utama (a × d) ditolak pepenjuru kedua (b × c).',
+                    'Bagi Matriks 3x3: Gunakan Kembangan Kofaktor mengikut baris 1: |A| = a11(C11) + a12(C12) + a13(C13).'
+                ],
+                renderSim: function() {
+                    return `
+                        <div class="space-y-4">
+                            <span class="block text-slate-600 font-bold">Pengiraan Penentu Matriks 2x2:</span>
+                            <div class="grid grid-cols-2 gap-1 max-w-[160px]">
+                                <input type="number" id="s3_a" value="4" oninput="runSim3()" class="p-1.5 border rounded text-center font-bold">
+                                <input type="number" id="s3_b" value="2" oninput="runSim3()" class="p-1.5 border rounded text-center font-bold">
+                                <input type="number" id="s3_c" value="1" oninput="runSim3()" class="p-1.5 border rounded text-center font-bold">
+                                <input type="number" id="s3_d" value="3" oninput="runSim3()" class="p-1.5 border rounded text-center font-bold">
+                            </div>
+                            <div id="sim3Result" class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-900 font-bold"></div>
+                        </div>
+                    `;
+                }
+            },
+            {
+                id: 4,
+                fileName: '4_minor_cofactor_adjoint.html',
+                category: 'ANALISIS MATRIKS',
+                title: 'Find - Minor, Cofactor & Adjoint',
+                concept: 'Minor M_ij ialah penentu sub-matriks selepas memotong baris i dan lajur j. Kofaktor C_ij menambah tanda positif/negatif (-1)^(i+j). Adjung adj(A) ialah transposisi bagi matriks kofaktor C^T.',
+                formula: 'C_{ij} = (-1)^{i+j} M_{ij}, \\quad \\text{adj}(A) = C^T',
+                steps: [
+                    'Cari Minor bagi setiap unsur M_ij.',
+                    'Gunakan tanda berselang-seling (+ - + / - + -) untuk membentuk Matriks Kofaktor C.',
+                    'Transposkan matriks kofaktor tersebut untuk dapatkan Adjung adj(A).'
+                ],
+                renderSim: function() {
+                    return `
+                        <div class="space-y-3">
+                            <span class="block text-slate-600 font-bold">Adjoint Matriks 2x2:</span>
+                            <div class="grid grid-cols-2 gap-1 max-w-[160px]">
+                                <input type="number" id="s4_a" value="3" oninput="runSim4()" class="p-1 border rounded text-center font-bold">
+                                <input type="number" id="s4_b" value="1" oninput="runSim4()" class="p-1 border rounded text-center font-bold">
+                                <input type="number" id="s4_c" value="2" oninput="runSim4()" class="p-1 border rounded text-center font-bold">
+                                <input type="number" id="s4_d" value="4" oninput="runSim4()" class="p-1 border rounded text-center font-bold">
+                            </div>
+                            <div id="sim4Result" class="p-3 bg-teal-50 border border-teal-200 rounded-lg text-teal-900 font-bold"></div>
+                        </div>
+                    `;
+                }
+            },
+            {
+                id: 5,
+                fileName: '5_inverse.html',
+                category: 'MATRIKS SONGSANG',
+                title: 'Inverse Method - (2x2) & (3x3)',
+                concept: 'Matriks songsang A^-1 mematuhi A × A^-1 = I. Songsangan wujud HANYA jika penentu |A| ≠ 0. Formula asasnya mengabungkan penentu dan adjung.',
+                formula: 'A^{-1} = \\frac{1}{|A|} \\text{adj}(A) = \\frac{1}{ad-bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}',
+                steps: [
+                    'Kira penentu |A| = ad - bc.',
+                    'Jika |A| = 0, kembalikan "Tiada Matriks Songsang".',
+                    'Dapatkan adjung dan bahagikan dengan penentu |A|.'
+                ],
+                renderSim: function() {
+                    return `
+                        <div class="space-y-3">
+                            <span class="block text-slate-600 font-bold">Simulasi Matriks Songsang A⁻¹ (2x2):</span>
+                            <div class="grid grid-cols-2 gap-1 max-w-[160px]">
+                                <input type="number" id="s5_a" value="4" oninput="runSim5()" class="p-1 border rounded text-center font-bold">
+                                <input type="number" id="s5_b" value="2" oninput="runSim5()" class="p-1 border rounded text-center font-bold">
+                                <input type="number" id="s5_c" value="1" oninput="runSim5()" class="p-1 border rounded text-center font-bold">
+                                <input type="number" id="s5_d" value="3" oninput="runSim5()" class="p-1 border rounded text-center font-bold">
+                            </div>
+                            <div id="sim5Result" class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 font-bold"></div>
+                        </div>
+                    `;
+                }
+            },
+            {
+                id: 6,
+                fileName: '6_cramer.html',
+                category: 'PETUA CRAMER',
+                title: "Cramer's Method - (2x2) & (3x3)",
+                concept: "Petua Cramer menyelesaikan sistem persamaan linear AX = B dengan mengira nisbah penentu matriks pekali digantikan dengan pemalar B.",
+                formula: 'x = \\frac{|A_x|}{|A|}, \\quad y = \\frac{|A_y|}{|A|}',
+                steps: [
+                    'Kira penentu utama |A| daripada pekali pembolehubah.',
+                    'Bentuk |Ax| dengan menggantikan lajur x dengan pemalar B, lalu kira |Ax|.',
+                    'Bentuk |Ay| dengan menggantikan lajur y dengan pemalar B, lalu kira |Ay|.',
+                    'Bahagikan x = |Ax| / |A| dan y = |Ay| / |A|.'
+                ],
+                renderSim: function() {
+                    return `
+                        <div class="space-y-3">
+                            <span class="block text-slate-600 font-bold">Sistem 2x2: ax + by = e , cx + dy = f</span>
+                            <div class="space-y-1 text-xs">
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="s6_a" value="2" oninput="runSim6()" class="w-12 p-1 border rounded text-center font-bold"> x +
+                                    <input type="number" id="s6_b" value="1" oninput="runSim6()" class="w-12 p-1 border rounded text-center font-bold"> y =
+                                    <input type="number" id="s6_e" value="5" oninput="runSim6()" class="w-12 p-1 border border-emerald-400 bg-emerald-50 rounded text-center font-bold">
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="s6_c" value="1" oninput="runSim6()" class="w-12 p-1 border rounded text-center font-bold"> x +
+                                    <input type="number" id="s6_d" value="3" oninput="runSim6()" class="w-12 p-1 border rounded text-center font-bold"> y =
+                                    <input type="number" id="s6_f" value="10" oninput="runSim6()" class="w-12 p-1 border border-emerald-400 bg-emerald-50 rounded text-center font-bold">
+                                </div>
+                            </div>
+                            <div id="sim6Result" class="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-900 font-bold"></div>
+                        </div>
+                    `;
+                }
+            }
+        ];
+
+        let currentModalIdx = 0;
+        let currentCodeIdx = 0;
+
+        // Open Dedicated Code Viewer Sub-Page
+        function openCodePage(idx) {
+            currentCodeIdx = idx;
+            const data = topicsData[idx];
+
+            document.getElementById('codePageTitle').innerText = data.title;
+            document.getElementById('codePageFileName').innerText = data.fileName;
+            document.getElementById('mainCodeArea').value = generateStandaloneHTMLCode(data);
+
+            // Hide Main Page, Show Code Sub-page
+            document.getElementById('mainPageView').classList.add('hidden');
+            document.getElementById('codeDisplayPageView').classList.remove('hidden');
+
+            if(!document.getElementById('topicModal').classList.contains('hidden')) {
+                closeTopicModal();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeCodePage() {
+            document.getElementById('codeDisplayPageView').classList.add('hidden');
+            document.getElementById('mainPageView').classList.remove('hidden');
+        }
+
+        function copyCodeFromPage() {
+            const txtArea = document.getElementById('mainCodeArea');
+            txtArea.select();
+            document.execCommand('copy');
+            showToast('Kod HTML berjaya disalin!');
+        }
+
+        function downloadCodeFromPage() {
+            const data = topicsData[currentCodeIdx];
+            const content = generateStandaloneHTMLCode(data);
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = data.fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Fail ${data.fileName} telah dimuat turun!`);
+        }
+
+        // Modal Functionalities
+        function openTopicModal(idx) {
+            currentModalIdx = idx;
+            const data = topicsData[idx];
+
+            document.getElementById('modalTopicBadgeNum').innerText = data.id;
+            document.getElementById('modalTopicCategory').innerText = data.category;
+            document.getElementById('modalTopicTitle').innerText = data.title;
+            document.getElementById('modalConceptText').innerText = data.concept;
+
+            document.getElementById('modalOpenCodeBtn').onclick = function() {
+                openCodePage(idx);
+            };
+
+            // Render KaTeX Formula
+            const formulaBox = document.getElementById('modalFormulaBox');
+            try {
+                katex.render(data.formula, formulaBox, { throwOnError: false, displayMode: true });
+            } catch(e) {
+                formulaBox.innerText = data.formula;
+            }
+
+            // Steps
+            const stepsList = document.getElementById('modalStepsList');
+            stepsList.innerHTML = '';
+            data.steps.forEach((st, i) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-2 bg-white p-2 rounded-lg border border-slate-200';
+                li.innerHTML = `<span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">${i+1}</span> <span>${st}</span>`;
+                stepsList.appendChild(li);
+            });
+
+            // Simulator
+            const simContainer = document.getElementById('modalSimulatorContainer');
+            simContainer.innerHTML = data.renderSim();
+
+            // Trigger simulation calculations
+            setTimeout(() => {
+                if(idx === 0) runSim1();
+                if(idx === 1) runSim2();
+                if(idx === 2) runSim3();
+                if(idx === 3) runSim4();
+                if(idx === 4) runSim5();
+                if(idx === 5) runSim6();
+            }, 50);
+
+            document.getElementById('topicModal').classList.remove('hidden');
+        }
+
+        function closeTopicModal() {
+            document.getElementById('topicModal').classList.add('hidden');
+        }
+
+        // Generate standalone HTML file string for each topic
+        function generateStandaloneHTMLCode(data) {
+            return `<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${data.title} - Topik Matriks</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 min-h-screen p-6 font-sans">
+    <div class="max-w-3xl mx-auto bg-white rounded-3xl p-6 shadow-xl border-4 border-sky-300">
+        <div class="flex items-center justify-between border-b pb-4 mb-4">
+            <h1 class="text-xl font-black text-slate-800">${data.title}</h1>
+            <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">${data.category}</span>
+        </div>
+        <div class="bg-sky-50 p-4 rounded-2xl mb-4">
+            <h3 class="font-bold text-sky-900 text-sm mb-1">Konsep Utama:</h3>
+            <p class="text-xs text-slate-700 leading-relaxed">${data.concept}</p>
+        </div>
+        <div class="bg-slate-50 p-4 rounded-2xl mb-4">
+            <h3 class="font-bold text-slate-800 text-sm mb-2">Langkah Penyelesaian:</h3>
+            <ul class="list-disc pl-5 text-xs text-slate-700 space-y-1">
+                ${data.steps.map(s => `<li>${s}</li>`).join('\n                ')}
+            </ul>
+        </div>
+        <div class="text-center pt-4 border-t text-xs text-slate-400">
+            Fail HTML Terasing - Hub Pembelajaran Matriks Interaktif
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        function openOverviewModal() {
+            document.getElementById('overviewModal').classList.remove('hidden');
+        }
+        function closeOverviewModal() {
+            document.getElementById('overviewModal').classList.add('hidden');
+        }
+
+        function scrollToGrid() {
+            document.getElementById('topicsGridSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastBox');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function runSim1() {
+            const type = document.getElementById('opType1').value;
+            const a11 = parseFloat(document.getElementById('s1_a11').value) || 0;
+            const a12 = parseFloat(document.getElementById('s1_a12').value) || 0;
+            const a21 = parseFloat(document.getElementById('s1_a21').value) || 0;
+            const a22 = parseFloat(document.getElementById('s1_a22').value) || 0;
+
+            const b11 = parseFloat(document.getElementById('s1_b11').value) || 0;
+            const b12 = parseFloat(document.getElementById('s1_b12').value) || 0;
+            const b21 = parseFloat(document.getElementById('s1_b21').value) || 0;
+            const b22 = parseFloat(document.getElementById('s1_b22').value) || 0;
+
+            let res11, res12, res21, res22, opSym;
+            if(type === 'add') {
+                opSym = '+';
+                res11 = a11 + b11; res12 = a12 + b12;
+                res21 = a21 + b21; res22 = a22 + b22;
+            } else {
+                opSym = '-';
+                res11 = a11 - b11; res12 = a12 - b12;
+                res21 = a21 - b21; res22 = a22 - b22;
+            }
+
+            document.getElementById('sim1Result').innerHTML = `
+                <p>Hasil A ${opSym} B =</p>
+                <p class="text-lg">[ ${res11} , ${res12} ; ${res21} , ${res22} ]</p>
+            `;
+        }
+
+        function runSim2() {
+            const a11 = parseFloat(document.getElementById('s2_a11').value) || 0;
+            const a12 = parseFloat(document.getElementById('s2_a12').value) || 0;
+            const a21 = parseFloat(document.getElementById('s2_a21').value) || 0;
+            const a22 = parseFloat(document.getElementById('s2_a22').value) || 0;
+
+            const b11 = parseFloat(document.getElementById('s2_b11').value) || 0;
+            const b12 = parseFloat(document.getElementById('s2_b12').value) || 0;
+            const b21 = parseFloat(document.getElementById('s2_b21').value) || 0;
+            const b22 = parseFloat(document.getElementById('s2_b22').value) || 0;
+
+            const c11 = (a11 * b11) + (a12 * b21);
+            const c12 = (a11 * b12) + (a12 * b22);
+            const c21 = (a21 * b11) + (a22 * b21);
+            const c22 = (a21 * b12) + (a22 * b22);
+
+            document.getElementById('sim2Result').innerHTML = `
+                <p>Hasil Darab AB =</p>
+                <p class="text-lg">[ ${c11} , ${c12} ; ${c21} , ${c22} ]</p>
+            `;
+        }
+
+        function runSim3() {
+            const a = parseFloat(document.getElementById('s3_a').value) || 0;
+            const b = parseFloat(document.getElementById('s3_b').value) || 0;
+            const c = parseFloat(document.getElementById('s3_c').value) || 0;
+            const d = parseFloat(document.getElementById('s3_d').value) || 0;
+
+            const det = (a * d) - (b * c);
+            document.getElementById('sim3Result').innerHTML = `
+                <p>|A| = (${a} × ${d}) - (${b} × ${c}) = ${a*d} - ${b*c} = <b>${det}</b></p>
+            `;
+        }
+
+        function runSim4() {
+            const a = parseFloat(document.getElementById('s4_a').value) || 0;
+            const b = parseFloat(document.getElementById('s4_b').value) || 0;
+            const c = parseFloat(document.getElementById('s4_c').value) || 0;
+            const d = parseFloat(document.getElementById('s4_d').value) || 0;
+
+            document.getElementById('sim4Result').innerHTML = `
+                <p>Adjoint adj(A) = [ d, -b ; -c, a ] =</p>
+                <p class="text-lg">[ ${d} , ${-b} ; ${-c} , ${a} ]</p>
+            `;
+        }
+
+        function runSim5() {
+            const a = parseFloat(document.getElementById('s5_a').value) || 0;
+            const b = parseFloat(document.getElementById('s5_b').value) || 0;
+            const c = parseFloat(document.getElementById('s5_c').value) || 0;
+            const d = parseFloat(document.getElementById('s5_d').value) || 0;
+
+            const det = (a * d) - (b * c);
+            if(det === 0) {
+                document.getElementById('sim5Result').innerHTML = `<p class="text-rose-600">|A| = 0. Matriks Songsang TIDAK WUJUD!</p>`;
+            } else {
+                const invA = (d / det).toFixed(2);
+                const invB = (-b / det).toFixed(2);
+                const invC = (-c / det).toFixed(2);
+                const invD = (a / det).toFixed(2);
+                document.getElementById('sim5Result').innerHTML = `
+                    <p>|A| = ${det}</p>
+                    <p class="text-lg">A⁻¹ = [ ${invA} , ${invB} ; ${invC} , ${invD} ]</p>
+                `;
+            }
+        }
+
+        function runSim6() {
+            const a = parseFloat(document.getElementById('s6_a').value) || 0;
+            const b = parseFloat(document.getElementById('s6_b').value) || 0;
+            const c = parseFloat(document.getElementById('s6_c').value) || 0;
+            const d = parseFloat(document.getElementById('s6_d').value) || 0;
+            const e = parseFloat(document.getElementById('s6_e').value) || 0;
+            const f = parseFloat(document.getElementById('s6_f').value) || 0;
+
+            const detA = (a * d) - (b * c);
+            if(detA === 0) {
+                document.getElementById('sim6Result').innerHTML = `<p class="text-rose-600">|A| = 0 (Tiada penyelesaian unik).</p>`;
+            } else {
+                const detAx = (e * d) - (b * f);
+                const detAy = (a * f) - (e * c);
+                const x = detAx / detA;
+                const y = detAy / detA;
+
+                document.getElementById('sim6Result').innerHTML = `
+                    <p>|A| = ${detA}, |A_x| = ${detAx}, |A_y| = ${detAy}</p>
+                    <p class="text-lg">x = ${x.toFixed(2)},  y = ${y.toFixed(2)}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
