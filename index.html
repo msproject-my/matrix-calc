@@ -92,35 +92,34 @@
         /* 3D Glossy Buttons */
         .btn-3d-blue {
             background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-            border-bottom: 5px solid #0369a1;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-bottom: 4px solid #0369a1;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             transition: all 0.1s ease;
         }
         .btn-3d-blue:active {
-            transform: translateY(3px);
-            border-bottom-width: 2px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .btn-3d-red {
-            background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
-            border-bottom: 5px solid #991b1b;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.1s ease;
-        }
-        .btn-3d-red:active {
-            transform: translateY(3px);
+            transform: translateY(2px);
             border-bottom-width: 2px;
         }
 
         .btn-3d-green {
             background: linear-gradient(180deg, #34d399 0%, #059669 100%);
-            border-bottom: 5px solid #047857;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-bottom: 4px solid #047857;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             transition: all 0.1s ease;
         }
         .btn-3d-green:active {
-            transform: translateY(3px);
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        .btn-3d-red {
+            background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+            border-bottom: 4px solid #991b1b;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-red:active {
+            transform: translateY(2px);
             border-bottom-width: 2px;
         }
 
@@ -165,10 +164,9 @@
 
     <!-- Main View Page Container -->
     <div id="mainPageView" class="block">
-        <!-- Hero Banner with 3D Extruded Title -->
         <main class="max-w-6xl mx-auto px-4 mt-6">
+            <!-- Hero Banner -->
             <section class="relative bg-gradient-to-b from-sky-400 to-blue-600 rounded-3xl p-6 sm:p-10 border-4 border-white shadow-2xl overflow-hidden mb-10 text-center">
-                <!-- Floating Decorative 3D Stars/Icons -->
                 <div class="absolute top-4 left-6 text-yellow-300 text-3xl animate-bounce pointer-events-none drop-shadow-md">
                     <i class="fa-solid fa-star"></i>
                 </div>
@@ -177,33 +175,31 @@
                 </div>
 
                 <div class="relative z-10 max-w-3xl mx-auto">
-                    <!-- Header Badge -->
                     <div class="inline-block bg-gradient-to-r from-red-600 to-rose-500 text-white font-black text-xs sm:text-sm px-6 py-2 rounded-full border-2 border-white shadow-lg mb-3 tracking-widest uppercase">
                         Engineering Mathematics
                     </div>
 
-                    <!-- 3D Extruded Big Title -->
                     <h2 class="text-4xl sm:text-6xl font-black font-display tracking-wide mb-3 text-3d-yellow">
                         MATRIX
                     </h2>
                 </div>
             </section>
 
-            <!-- Main 6 Matrix Topics Section -->
+            <!-- Main 6 Sub-modules Section -->
             <section id="topicsGridSection" class="scroll-mt-6">
                 <div class="flex items-center justify-between mb-6 bg-white/80 backdrop-blur-md p-4 rounded-2xl border-2 border-sky-200 shadow-sm">
                     <div>
                         <h3 class="text-xl font-black text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-boxes-stacked text-blue-600"></i> SIX(6) SUB-MODULES
                         </h3>
-                        <p class="text-xs text-slate-600 font-medium mt-1">Select a sub-module to start the calculation simulation.</p>
+                        <p class="text-xs text-slate-600 font-medium mt-1">Select <b>NOTES</b> to view summary formulas or <b>CALCULATOR</b> to launch live interactive simulation.</p>
                     </div>
                 </div>
 
                 <!-- Grid Display for 6 Sub-modules (3 COLUMNS) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    <!-- Point 1: BASIC OPERATION (Addition & Subtraction) -->
+                    <!-- Sub-module 1: Addition & Subtraction -->
                     <div class="clay-card p-6 flex flex-col justify-between relative group">
                         <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
                             1
@@ -226,14 +222,17 @@
                                 Perform matrix addition and subtraction with step-by-step calculations.
                             </p>
                         </div>
-                        <div class="mt-5 pt-3 border-t border-slate-100">
-                            <button onclick="openTopicModal(0)" class="btn-3d-blue w-full py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> Open Module
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2">
+                            <button onclick="openTopicModal(0)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
+                            <a href="1_addition_subtraction.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                                <i class="fa-solid fa-calculator"></i> CALCULATOR
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Point 2: BASIC OPERATION (Multiplication) -->
+                    <!-- Sub-module 2: Multiplication -->
                     <div class="clay-card p-6 flex flex-col justify-between relative group">
                         <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
                             2
@@ -256,14 +255,17 @@
                                 Perform matrix multiplication with step-by-step calculations.
                             </p>
                         </div>
-                        <div class="mt-5 pt-3 border-t border-slate-100">
-                            <button onclick="openTopicModal(1)" class="btn-3d-blue w-full py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> Open Module
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2">
+                            <button onclick="openTopicModal(1)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
+                            <a href="2_multiplication.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                                <i class="fa-solid fa-calculator"></i> CALCULATOR
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Point 3: DETERMINANT -->
+                    <!-- Sub-module 3: Determinant -->
                     <div class="clay-card-green p-6 flex flex-col justify-between relative group">
                         <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
                             3
@@ -286,14 +288,17 @@
                                 Calculate the determinant of a matrix with step-by-step calculations.
                             </p>
                         </div>
-                        <div class="mt-5 pt-3 border-t border-slate-100">
-                            <button onclick="openTopicModal(2)" class="btn-3d-green w-full py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> Open Module
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2">
+                            <button onclick="openTopicModal(2)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
+                            <a href="3_determinant.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                                <i class="fa-solid fa-calculator"></i> CALCULATOR
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Point 4: MATRIX ANALYSIS -->
+                    <!-- Sub-module 4: Matrix Analysis -->
                     <div class="clay-card-green p-6 flex flex-col justify-between relative group">
                         <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
                             4
@@ -316,14 +321,17 @@
                                 Calculate matrix minors, cofactors, and adjoints with step-by-step calculations.
                             </p>
                         </div>
-                        <div class="mt-5 pt-3 border-t border-slate-100">
-                            <button onclick="openTopicModal(3)" class="btn-3d-green w-full py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> Open Module
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2">
+                            <button onclick="openTopicModal(3)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
+                            <a href="4_minor_cofactor_adjoint.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                                <i class="fa-solid fa-calculator"></i> CALCULATOR
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Point 5: INVERSE MATRIX -->
+                    <!-- Sub-module 5: Inverse Matrix -->
                     <div class="clay-card-amber p-6 flex flex-col justify-between relative group">
                         <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
                             5
@@ -346,14 +354,17 @@
                                 Find the inverse of (2×2) and (3×3) matrices with step-by-step calculations.
                             </p>
                         </div>
-                        <div class="mt-5 pt-3 border-t border-slate-100">
-                            <button onclick="openTopicModal(4)" class="btn-3d-blue w-full py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> Open Module
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2">
+                            <button onclick="openTopicModal(4)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
+                            <a href="5_inverse.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                                <i class="fa-solid fa-calculator"></i> CALCULATOR
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Point 6: Cramer's Rule -->
+                    <!-- Sub-module 6: Cramer's Rule -->
                     <div class="clay-card-amber p-6 flex flex-col justify-between relative group">
                         <div class="absolute -top-3 -right-3 w-9 h-9 badge-number rounded-full flex items-center justify-center text-sm shadow-md">
                             6
@@ -376,10 +387,13 @@
                                 Solve (2×2) and (3×3) systems of linear equations using Cramer's Rule with step-by-step calculations.
                             </p>
                         </div>
-                        <div class="mt-5 pt-3 border-t border-slate-100">
-                            <button onclick="openTopicModal(5)" class="btn-3d-blue w-full py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-play"></i> Open Module
+                        <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2">
+                            <button onclick="openTopicModal(5)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
+                            <a href="6_cramer.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                                <i class="fa-solid fa-calculator"></i> CALCULATOR
+                            </a>
                         </div>
                     </div>
 
@@ -388,7 +402,7 @@
         </main>
     </div>
 
-    <!-- Topic Detail Modal Container -->
+    <!-- Topic Detail Modal Container (NOTES VIEW) -->
     <div id="topicModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 hidden">
         <div class="bg-white border-4 border-sky-300 rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             
@@ -444,10 +458,10 @@
                     </ol>
                 </div>
 
-                <!-- Live Example & Interactive Simulator -->
+                <!-- Live Example & Interactive Simulator Preview -->
                 <div class="bg-emerald-50 border-2 border-emerald-200 p-4 sm:p-5 rounded-2xl">
                     <h4 class="text-xs font-black uppercase tracking-wider text-emerald-800 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-calculator text-emerald-600"></i> Live Matrix Interactive Simulator
+                        <i class="fa-solid fa-calculator text-emerald-600"></i> Quick Interactive Preview
                     </h4>
                     <div id="modalSimulatorContainer" class="bg-white p-4 rounded-xl border border-emerald-300 font-mono text-xs space-y-3">
                         <!-- Dynamic Interactive Matrix Inputs & Solutions -->
@@ -456,7 +470,10 @@
             </div>
 
             <!-- Modal Footer -->
-            <div class="p-4 bg-slate-100 border-t border-slate-200 flex items-center justify-end">
+            <div class="p-4 bg-slate-100 border-t border-slate-200 flex items-center justify-between">
+                <a id="modalCalcLink" href="#" class="btn-3d-green px-5 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-2 no-underline">
+                    <i class="fa-solid fa-calculator"></i> Launch Full Calculator
+                </a>
                 <button onclick="closeTopicModal()" class="btn-3d-red px-6 py-2 rounded-xl text-white font-bold text-xs">
                     Close
                 </button>
@@ -471,6 +488,7 @@
                 id: 1,
                 category: 'BASIC OPERATION',
                 title: 'Addition & Subtraction',
+                calcUrl: '1_addition_subtraction.html',
                 concept: 'Matrix addition and subtraction can only be performed if both matrices have the exact same dimensions (same number of rows & columns). Operations are executed directly on corresponding elements.',
                 formula: 'A_{m \\times n} \\pm B_{m \\times n} = [a_{ij} \\pm b_{ij}]',
                 steps: [
@@ -517,6 +535,7 @@
                 id: 2,
                 category: 'BASIC OPERATION',
                 title: 'Multiplication',
+                calcUrl: '2_multiplication.html',
                 concept: 'Matrix multiplication AB is valid only if the number of columns in Matrix A equals the number of rows in Matrix B. Each result element is computed as the dot product of a row from A and a column from B.',
                 formula: '(m \\times n) \\times (n \\times p) = (m \\times p)',
                 steps: [
@@ -557,6 +576,7 @@
                 id: 3,
                 category: 'DETERMINANT',
                 title: 'Determinant',
+                calcUrl: '3_determinant.html',
                 concept: 'The determinant of a matrix is a single scalar numerical value describing properties of a square matrix. If |A| = 0, the matrix is singular and has no inverse.',
                 formula: '\\det \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc',
                 steps: [
@@ -582,6 +602,7 @@
                 id: 4,
                 category: 'MATRIX ANALYSIS',
                 title: 'Minor, Cofactor & Adjoint',
+                calcUrl: '4_minor_cofactor_adjoint.html',
                 concept: 'Minor M_ij is the determinant of the sub-matrix after deleting row i and column j. Cofactor C_ij applies alternating sign factors (-1)^(i+j). Adjoint adj(A) is the transpose of the cofactor matrix C^T.',
                 formula: 'C_{ij} = (-1)^{i+j} M_{ij}, \\quad \\text{adj}(A) = C^T',
                 steps: [
@@ -608,6 +629,7 @@
                 id: 5,
                 category: 'INVERSE MATRIX',
                 title: 'Inverse Method (2x2) & (3x3)',
+                calcUrl: '5_inverse.html',
                 concept: 'The inverse matrix A^-1 satisfies A × A^-1 = I. The inverse exists ONLY if the determinant |A| ≠ 0. The formula combines the determinant and adjoint matrix.',
                 formula: 'A^{-1} = \\frac{1}{|A|} \\text{adj}(A) = \\frac{1}{ad-bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}',
                 steps: [
@@ -634,6 +656,7 @@
                 id: 6,
                 category: 'INVERSE MATRIX',
                 title: "Cramer's Rule (2x2) & (3x3)",
+                calcUrl: '6_cramer.html',
                 concept: "Cramer's Rule solves systems of linear equations AX = B by calculating ratios of determinants where coefficient columns are replaced by constant terms B.",
                 formula: 'x = \\frac{|A_x|}{|A|}, \\quad y = \\frac{|A_y|}{|A|}',
                 steps: [
@@ -676,6 +699,7 @@
             document.getElementById('modalTopicCategory').innerText = data.category;
             document.getElementById('modalTopicTitle').innerText = data.title;
             document.getElementById('modalConceptText').innerText = data.concept;
+            document.getElementById('modalCalcLink').href = data.calcUrl;
 
             // Render KaTeX Formula
             const formulaBox = document.getElementById('modalFormulaBox');
