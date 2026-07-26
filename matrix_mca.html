@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Minor, Kofaktor & Adjoint 3D</title>
+    <title>3D Minor, Cofactor & Adjoint Calculator</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -101,6 +101,17 @@
             border-bottom-width: 2px;
         }
 
+        .btn-3d-green {
+            background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+            border-bottom: 4px solid #047857;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-green:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
         /* 3D Matrix Brackets */
         .matrix-bracket {
             display: inline-flex;
@@ -114,20 +125,20 @@
             position: absolute;
             top: -3px;
             bottom: -3px;
-            width: 10px;
+            width: 8px;
             border: 3px solid #1d4ed8;
         }
 
         .matrix-bracket::before {
             left: 0;
             border-right: none;
-            border-radius: 8px 0 0 8px;
+            border-radius: 6px 0 0 6px;
         }
 
         .matrix-bracket::after {
             right: 0;
             border-left: none;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 6px 6px 0;
         }
 
         .matrix-bracket-purple::before, .matrix-bracket-purple::after {
@@ -272,64 +283,62 @@
 </head>
 <body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
 
-    <header class="max-w-6xl mx-auto pt-6 px-4">
-        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
-            <!-- Background Star -->
-            <div class="absolute -top-3 -right-3 text-yellow-400 text-3xl opacity-30 pointer-events-none">
-                <i class="fa-solid fa-star"></i>
-            </div>
-
-            <!-- Left Branding -->
+    <!-- Top Header Banner (Expanded Container Width max-w-[1500px]) -->
+    <header class="max-w-[1500px] mx-auto pt-6 px-4">
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-4 sm:p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
             <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-gradient-to-tr from-purple-700 via-purple-500 to-indigo-400 rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                <div class="w-14 h-14 bg-gradient-to-tr from-purple-700 via-purple-500 to-indigo-400 rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter shrink-0">
                     [MCA]
                 </div>
                 <div>
                     <div class="flex flex-wrap items-center gap-2 mb-1">
                         <span class="bg-gradient-to-r from-red-600 to-rose-500 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow-sm tracking-widest uppercase">
-                            MODUL SESI 2026/2027
+                            ENGINEERING MATHEMATICS
                         </span>
                         <span class="bg-purple-100 text-purple-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-purple-300 flex items-center gap-1">
-                            <i class="fa-solid fa-calculator text-purple-800"></i> Topik 4
+                            <i class="fa-solid fa-calculator text-purple-800"></i> Sub-module 4
                         </span>
                     </div>
                     <h1 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight leading-tight font-display">
-                        HUB PEMBELAJARAN & KALKULATOR MATRIKS 3D
+                        MATRIX CALCULATOR HUB
                     </h1>
                 </div>
             </div>
 
-            <!-- Navigation Button -->
-            <div class="flex items-center gap-2">
+            <!-- Action Buttons with Home Button -->
+            <div class="flex items-center gap-2.5">
+                <a href="index.html" class="btn-3d-green px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2 no-underline">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
                 <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group"></i> 6 Modul Topik
+                    <i class="fa-solid fa-layer-group"></i> 6 Sub-modules
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 mt-6">
+    <main class="max-w-[1500px] mx-auto px-4 mt-6">
         <!-- Banner Section -->
         <section class="relative bg-gradient-to-b from-purple-500 via-indigo-600 to-purple-800 rounded-3xl p-6 sm:p-8 border-4 border-white shadow-2xl overflow-hidden mb-8 text-center">
             <div class="relative z-10 max-w-3xl mx-auto">
                 <div class="inline-block bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-black text-xs sm:text-sm px-6 py-1 rounded-full border-2 border-white shadow-lg mb-3 tracking-widest uppercase">
-                    MODUL KALKULATOR LIVE
+                    LIVE CALCULATOR MODULE
                 </div>
-                <h2 class="text-2xl sm:text-4xl font-black font-display tracking-wide mb-2 text-3d-yellow uppercase">
+                <h2 class="text-2xl sm:text-4xl font-black font-display tracking-wide mb-1 text-3d-yellow uppercase">
                     MINOR, COFACTOR & ADJOINT
                 </h2>
-                <h3 class="text-lg sm:text-xl font-black font-display text-3d-white uppercase mb-4">
+                <h3 class="text-lg sm:text-xl font-black font-display text-3d-white uppercase mb-3">
                     (2x2 & 3x3)
                 </h3>
-                <p class="text-white text-xs sm:text-sm font-semibold leading-relaxed bg-purple-950/40 p-3.5 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
-                    Masukkan nombor pada petak <span class="bg-yellow-300 text-slate-900 font-extrabold px-1.5 py-0.5 rounded">kuning</span> di bawah. Nilai **Minor**, **Kofaktor**, dan **Adjoint** akan dihitung dan dikemaskini secara **langsung (*live*)**!
+                <p class="text-white text-xs sm:text-sm font-semibold leading-relaxed bg-purple-950/40 p-3 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
+                    Enter values in the <span class="bg-yellow-300 text-slate-900 font-extrabold px-1.5 py-0.5 rounded">yellow</span> input cells below. **Minor**, **Cofactor**, and **Adjoint** matrix values will be computed in **real-time**!
                 </p>
             </div>
         </section>
 
-        <!-- SEKSYEN 1: MATRIKS 2x2 -->
+        <!-- SECTION 1: 2x2 MATRIX -->
         <section class="poster-card-purple p-4 sm:p-6 mb-8">
-            <div class="poster-header-purple p-3.5 rounded-2xl text-white mb-6 flex items-center gap-3">
+            <div class="poster-header-purple p-3 rounded-2xl text-white mb-6 flex items-center gap-3">
                 <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
                     1
                 </div>
@@ -341,10 +350,10 @@
                 </div>
             </div>
 
-            <div class="space-y-6 overflow-x-auto pb-4">
+            <div class="space-y-6">
                 <!-- Step 1: Input Matrix A 2x2 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
-                    <div class="label-tag inline-block mb-4">LANGKAH 1: MATRIKS A</div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm">
+                    <div class="label-tag inline-block mb-4">STEP 1: MATRIX A</div>
                     <div class="flex items-center gap-4 text-sm font-bold text-slate-800">
                         <span class="text-base font-serif italic text-purple-900 font-black">A</span>
                         <span class="text-lg font-black">=</span>
@@ -360,8 +369,8 @@
                 </div>
 
                 <!-- Step 2: Minor A 2x2 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
-                    <div class="label-tag inline-block mb-4">LANGKAH 2: MINOR A</div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm">
+                    <div class="label-tag inline-block mb-4">STEP 2: MINOR MATRIX A</div>
                     <div class="flex items-center gap-4 text-sm font-bold text-slate-800">
                         <span class="text-purple-900 font-black">Minor A =</span>
                         <div class="matrix-bracket matrix-bracket-purple">
@@ -376,8 +385,8 @@
                 </div>
 
                 <!-- Step 3: Cofactor A 2x2 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
-                    <div class="label-tag inline-block mb-4">LANGKAH 3: COFACTOR A</div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm">
+                    <div class="label-tag inline-block mb-4">STEP 3: COFACTOR MATRIX A</div>
                     
                     <div class="flex items-center gap-3 text-sm font-bold text-slate-800 mb-4 bg-purple-50 p-3.5 rounded-xl border border-purple-200">
                         <span class="text-purple-900 font-black">COFACTOR A =</span>
@@ -442,10 +451,10 @@
                 </div>
 
                 <!-- Step 4: Adjoint A 2x2 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm min-w-[750px]">
-                    <div class="label-tag inline-block mb-4">LANGKAH 4: ADJOIN A = (COFACTOR A)<sup>T</sup></div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-purple-200 shadow-sm">
+                    <div class="label-tag inline-block mb-4">STEP 4: ADJOINT A = (COFACTOR A)<sup>T</sup></div>
                     <div class="flex flex-wrap items-center gap-4 text-sm font-bold text-slate-800">
-                        <span class="text-purple-900 font-black">ADJOIN A =</span>
+                        <span class="text-purple-900 font-black">ADJOINT A =</span>
                         <div class="relative inline-flex items-start">
                             <div class="matrix-bracket matrix-bracket-purple">
                                 <div class="matrix-grid g-2x2">
@@ -473,9 +482,9 @@
             </div>
         </section>
 
-        <!-- SEKSYEN 2: MATRIKS 3x3 -->
+        <!-- SECTION 2: 3x3 MATRIX -->
         <section class="poster-card-emerald p-4 sm:p-6 mb-8">
-            <div class="poster-header-emerald p-3.5 rounded-2xl text-white mb-6 flex items-center gap-3">
+            <div class="poster-header-emerald p-3 rounded-2xl text-white mb-6 flex items-center gap-3">
                 <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
                     2
                 </div>
@@ -487,10 +496,10 @@
                 </div>
             </div>
 
-            <div class="space-y-6 overflow-x-auto pb-4">
+            <div class="space-y-6">
                 <!-- Input Matrix A 3x3 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
-                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 1: MATRIKS A (3x3)</div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm">
+                    <div class="label-tag-emerald inline-block mb-4">STEP 1: MATRIX A (3x3)</div>
                     <div class="flex items-center gap-4 text-sm font-bold text-slate-800">
                         <span class="text-base font-serif italic text-emerald-900 font-black">A</span>
                         <span class="text-lg font-black">=</span>
@@ -513,8 +522,8 @@
                 </div>
 
                 <!-- Minor A 3x3 Expansion -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
-                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 2: MINOR A (PEMECAHAN 9 SUB-MATRIKS 2x2)</div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm">
+                    <div class="label-tag-emerald inline-block mb-4">STEP 2: MINOR MATRIX A (9 SUB-MATRICES 2x2 BREAKDOWN)</div>
                     
                     <!-- Sub-matrices grid -->
                     <div class="flex items-center gap-3 text-sm font-bold text-slate-800 mb-6 bg-emerald-50 p-4 rounded-xl border border-emerald-200">
@@ -621,8 +630,8 @@
                 </div>
 
                 <!-- Cofactor 3x3 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
-                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 3: COFACTOR A (3x3)</div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm">
+                    <div class="label-tag-emerald inline-block mb-4">STEP 3: COFACTOR MATRIX A (3x3)</div>
 
                     <div class="flex flex-wrap items-center gap-3 text-sm font-bold text-slate-800">
                         <span class="text-emerald-900 font-black">COFACTOR A =</span>
@@ -670,10 +679,10 @@
                 </div>
 
                 <!-- Adjoint 3x3 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
-                    <div class="label-tag-emerald inline-block mb-4">LANGKAH 4: ADJOIN A = (COFACTOR A)<sup>T</sup></div>
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm">
+                    <div class="label-tag-emerald inline-block mb-4">STEP 4: ADJOINT A = (COFACTOR A)<sup>T</sup></div>
                     <div class="flex flex-wrap items-center gap-4 text-sm font-bold text-slate-800">
-                        <span class="text-emerald-900 font-black">ADJOIN A =</span>
+                        <span class="text-emerald-900 font-black">ADJOINT A =</span>
                         <div class="relative inline-flex items-start">
                             <div class="matrix-bracket matrix-bracket-emerald">
                                 <div class="matrix-grid g-3x3">
@@ -708,12 +717,12 @@
         </section>
     </main>
 
-    <!-- Topic Drawer Modal -->
+    <!-- Sub-modules Drawer Modal -->
     <div id="topicsDrawer" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
         <div class="bg-white border-4 border-purple-300 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-3">
             <div class="flex items-center justify-between border-b pb-3">
                 <h3 class="text-lg font-black text-slate-800 flex items-center gap-2 font-display">
-                    <i class="fa-solid fa-list-check text-purple-600"></i> Senarai 6 Modul Utama
+                    <i class="fa-solid fa-list-check text-purple-600"></i> Six Sub-modules
                 </h3>
                 <button onclick="toggleTopicsDrawer()" class="text-slate-400 hover:text-slate-600 font-bold">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -722,32 +731,32 @@
             <div class="space-y-2 text-xs font-semibold">
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
                     <span>1. Basic Operation (Addition & Subtraction)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 1</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 1</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
                     <span>2. Basic Operation (Multiplication)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 2</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 2</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
-                    <span>3. Find - Determinant (2x2 & 3x3)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 3</span>
+                    <span>3. Determinant</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 3</span>
                 </div>
                 <div class="p-3 bg-purple-100 border-2 border-purple-400 rounded-xl flex items-center justify-between font-bold text-purple-900">
-                    <span>4. Find - Minor, Cofactor & Adjoint</span>
-                    <span class="bg-purple-600 text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Sedang Dibuka</span>
+                    <span>4. Matrix Analysis</span>
+                    <span class="bg-purple-600 text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Active</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
-                    <span>5. Inverse Method - (2x2) & (3x3)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 5</span>
+                    <span>5. Inverse Matrix</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 5</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
-                    <span>6. Cramer's Method - (2x2) & (3x3)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 6</span>
+                    <span>6. Cramer's Rule</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 6</span>
                 </div>
             </div>
             <div class="pt-2 text-right">
                 <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2 rounded-xl text-white font-bold text-xs">
-                    Tutup
+                    Close
                 </button>
             </div>
         </div>
@@ -766,7 +775,7 @@
             if (elem) elem.innerText = val;
         }
 
-        /* LOGIK 2x2 */
+        /* 2x2 LOGIC */
         function calc2x2() {
             let a = getV('m2_00'), b = getV('m2_01');
             let c = getV('m2_10'), d = getV('m2_11');
@@ -795,13 +804,13 @@
             setT('adj2_f10', c01); setT('adj2_f11', c11);
         }
 
-        /* LOGIK 3x3 */
+        /* 3x3 LOGIC */
         function calc3x3() {
             let a = getV('m3_00'), b = getV('m3_01'), c = getV('m3_02');
             let d = getV('m3_10'), e = getV('m3_11'), f = getV('m3_12');
             let g = getV('m3_20'), h = getV('m3_21'), i = getV('m3_22');
 
-            // 9 Sub matrices
+            // 9 Sub-matrices
             setT('sub_00_11', e); setT('sub_00_12', f); setT('sub_00_21', h); setT('sub_00_22', i);
             setT('sub_01_10', d); setT('sub_01_12', f); setT('sub_01_20', g); setT('sub_01_22', i);
             setT('sub_02_10', d); setT('sub_02_11', e); setT('sub_02_20', g); setT('sub_02_21', h);
