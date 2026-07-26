@@ -146,10 +146,10 @@
         }
     </style>
 </head>
-<body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
+<body class="selection:bg-yellow-300 selection:text-slate-900 flex flex-col min-h-screen">
 
     <!-- Top Header Banner -->
-    <header class="max-w-6xl mx-auto pt-6 px-4">
+    <header class="max-w-6xl mx-auto pt-6 px-4 w-full">
         <div class="bg-white/95 backdrop-blur-md rounded-3xl p-4 border-4 border-sky-200 shadow-xl text-center md:text-left">
             <div class="flex items-center justify-center md:justify-start gap-3">
                 <div class="w-12 h-12 bg-gradient-to-tr from-blue-600 to-sky-400 rounded-2xl border-4 border-white shadow-md flex items-center justify-center text-white font-extrabold text-xl tracking-tighter shrink-0">
@@ -163,7 +163,7 @@
     </header>
 
     <!-- Main View Page Container -->
-    <div id="mainPageView" class="block">
+    <div id="mainPageView" class="block flex-grow">
         <main class="max-w-6xl mx-auto px-4 mt-6">
             <!-- Hero Banner -->
             <section class="relative bg-gradient-to-b from-sky-400 to-blue-600 rounded-3xl p-6 sm:p-10 border-4 border-white shadow-2xl overflow-hidden mb-10 text-center">
@@ -186,7 +186,7 @@
             </section>
 
             <!-- Main 6 Sub-modules Section -->
-            <section id="topicsGridSection" class="scroll-mt-6">
+            <section id="topicsGridSection" class="scroll-mt-6 mb-12">
                 <div class="flex items-center justify-between mb-6 bg-white/80 backdrop-blur-md p-4 rounded-2xl border-2 border-sky-200 shadow-sm">
                     <div>
                         <h3 class="text-xl font-black text-slate-800 flex items-center gap-2">
@@ -226,7 +226,7 @@
                             <button onclick="openTopicModal(0)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
-                            <a href="matrix_add_sub.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                            <a href="1_addition_subtraction.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
                                 <i class="fa-solid fa-calculator"></i> CALCULATOR
                             </a>
                         </div>
@@ -259,7 +259,7 @@
                             <button onclick="openTopicModal(1)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
-                            <a href="matrix_multi.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                            <a href="2_multiplication.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
                                 <i class="fa-solid fa-calculator"></i> CALCULATOR
                             </a>
                         </div>
@@ -292,7 +292,7 @@
                             <button onclick="openTopicModal(2)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
-                            <a href="matrix_det.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                            <a href="3_determinant.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
                                 <i class="fa-solid fa-calculator"></i> CALCULATOR
                             </a>
                         </div>
@@ -325,7 +325,7 @@
                             <button onclick="openTopicModal(3)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
-                            <a href="matrix_mca.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                            <a href="4_minor_cofactor_adjoint.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
                                 <i class="fa-solid fa-calculator"></i> CALCULATOR
                             </a>
                         </div>
@@ -358,7 +358,7 @@
                             <button onclick="openTopicModal(4)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
-                            <a href="matrix_inverse.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                            <a href="5_inverse.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
                                 <i class="fa-solid fa-calculator"></i> CALCULATOR
                             </a>
                         </div>
@@ -391,7 +391,7 @@
                             <button onclick="openTopicModal(5)" class="btn-3d-blue flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-book-open"></i> NOTES
                             </button>
-                            <a href="matrix_cram.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
+                            <a href="6_cramer.html" class="btn-3d-green flex-1 py-2.5 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-1.5 no-underline">
                                 <i class="fa-solid fa-calculator"></i> CALCULATOR
                             </a>
                         </div>
@@ -401,6 +401,25 @@
             </section>
         </main>
     </div>
+
+    <!-- FOOTER COMPONENT -->
+    <footer class="mt-auto max-w-6xl mx-auto px-4 pb-8 w-full">
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-6 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-sky-400 rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow-inner">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <div>
+                    <h5 class="text-sm font-black text-slate-800 tracking-tight">MOHDSAIFULPAHRUDIN</h5>
+                  
+                </div>
+            </div>
+
+                     <div class="text-xs font-bold text-slate-500">
+                &copy; 2026 All Rights Reserved
+            </div>
+        </div>
+    </footer>
 
     <!-- Topic Detail Modal Container (NOTES VIEW) -->
     <div id="topicModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 hidden">
@@ -488,7 +507,7 @@
                 id: 1,
                 category: 'BASIC OPERATION',
                 title: 'Addition & Subtraction',
-                calcUrl: 'matrix_add_sub.html',
+                calcUrl: '1_addition_subtraction.html',
                 concept: 'Matrix addition and subtraction can only be performed if both matrices have the exact same dimensions (same number of rows & columns). Operations are executed directly on corresponding elements.',
                 formula: 'A_{m \\times n} \\pm B_{m \\times n} = [a_{ij} \\pm b_{ij}]',
                 steps: [
@@ -535,7 +554,7 @@
                 id: 2,
                 category: 'BASIC OPERATION',
                 title: 'Multiplication',
-                calcUrl: 'matrix_multi.html',
+                calcUrl: '2_multiplication.html',
                 concept: 'Matrix multiplication AB is valid only if the number of columns in Matrix A equals the number of rows in Matrix B. Each result element is computed as the dot product of a row from A and a column from B.',
                 formula: '(m \\times n) \\times (n \\times p) = (m \\times p)',
                 steps: [
@@ -576,7 +595,7 @@
                 id: 3,
                 category: 'DETERMINANT',
                 title: 'Determinant',
-                calcUrl: 'matrix_det.html',
+                calcUrl: '3_determinant.html',
                 concept: 'The determinant of a matrix is a single scalar numerical value describing properties of a square matrix. If |A| = 0, the matrix is singular and has no inverse.',
                 formula: '\\det \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc',
                 steps: [
@@ -602,7 +621,7 @@
                 id: 4,
                 category: 'MATRIX ANALYSIS',
                 title: 'Minor, Cofactor & Adjoint',
-                calcUrl: 'matrix_mca.html',
+                calcUrl: '4_minor_cofactor_adjoint.html',
                 concept: 'Minor M_ij is the determinant of the sub-matrix after deleting row i and column j. Cofactor C_ij applies alternating sign factors (-1)^(i+j). Adjoint adj(A) is the transpose of the cofactor matrix C^T.',
                 formula: 'C_{ij} = (-1)^{i+j} M_{ij}, \\quad \\text{adj}(A) = C^T',
                 steps: [
@@ -629,7 +648,7 @@
                 id: 5,
                 category: 'INVERSE MATRIX',
                 title: 'Inverse Method (2x2) & (3x3)',
-                calcUrl: 'matrix_inverse.html',
+                calcUrl: '5_inverse.html',
                 concept: 'The inverse matrix A^-1 satisfies A × A^-1 = I. The inverse exists ONLY if the determinant |A| ≠ 0. The formula combines the determinant and adjoint matrix.',
                 formula: 'A^{-1} = \\frac{1}{|A|} \\text{adj}(A) = \\frac{1}{ad-bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}',
                 steps: [
@@ -656,7 +675,7 @@
                 id: 6,
                 category: 'INVERSE MATRIX',
                 title: "Cramer's Rule (2x2) & (3x3)",
-                calcUrl: 'matrix_cram.html',
+                calcUrl: '6_cramer.html',
                 concept: "Cramer's Rule solves systems of linear equations AX = B by calculating ratios of determinants where coefficient columns are replaced by constant terms B.",
                 formula: 'x = \\frac{|A_x|}{|A|}, \\quad y = \\frac{|A_y|}{|A|}',
                 steps: [
