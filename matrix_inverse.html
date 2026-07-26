@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inverse Method (2x2) & (3x3) - Matrix Calculator</title>
+    <title>Inverse Method (2x2 & 3x3) - Matrix Calculator</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -153,13 +153,12 @@
         .g-2x2 { grid-template-columns: repeat(2, 42px); grid-template-rows: repeat(2, 34px); }
         .g-3x3 { grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(3, 30px); }
 
-        /* Fraction-specific Grids - Compact & Balanced Dimensions */
         .g-1x2-frac { grid-template-columns: repeat(1, 72px); grid-template-rows: repeat(2, 42px); gap: 4px; }
         .g-1x3-frac { grid-template-columns: repeat(1, 74px); grid-template-rows: repeat(3, 42px); gap: 4px; }
         .g-1x3-var  { grid-template-columns: repeat(1, 42px); grid-template-rows: repeat(3, 42px); gap: 4px; }
         .g-1x2-var  { grid-template-columns: repeat(1, 42px); grid-template-rows: repeat(2, 42px); gap: 4px; }
 
-        /* Input Cell Styling (Yellow Background) */
+        /* Input Cell Styling */
         .matrix-grid input, .matrix-input {
             width: 100%;
             height: 100%;
@@ -202,7 +201,6 @@
             height: 100%;
         }
 
-        /* Hide Number Spinner Arrows */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -212,7 +210,6 @@
             -moz-appearance: textfield;
         }
 
-        /* Fraction styling */
         .fraction {
             display: inline-flex;
             flex-direction: column;
@@ -242,7 +239,6 @@
             box-sizing: border-box;
         }
 
-        /* Label Badges */
         .step-badge {
             background: linear-gradient(135deg, #1e3a8a, #3b82f6);
             color: #ffffff;
@@ -279,7 +275,7 @@
 </head>
 <body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
 
-    <!-- Top Header Banner (Expanded Container Width max-w-[1500px]) -->
+    <!-- Header -->
     <header class="max-w-[1500px] mx-auto pt-6 px-4">
         <div class="bg-white/95 backdrop-blur-md rounded-3xl p-4 sm:p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
             <div class="flex items-center gap-4">
@@ -301,7 +297,6 @@
                 </div>
             </div>
 
-            <!-- Header Action Buttons (With Home Button) -->
             <div class="flex items-center gap-2.5">
                 <a href="index.html" class="btn-3d-green px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2 no-underline">
                     <i class="fa-solid fa-house"></i> Home
@@ -752,15 +747,15 @@
                             <div class="matrix-bracket matrix-bracket-emerald">
                                 <div class="matrix-grid g-3x3">
                                     <div class="matrix-cell-white" id="m_00">-18</div>
-                                    <div class="matrix-cell-white" id="m_01">-27</div>
-                                    <div class="matrix-cell-white" id="m_02">12</div>
+                                    <div class="matrix-cell-white" id="m_01">14</div>
+                                    <div class="matrix-cell-white" id="m_02">26</div>
 
-                                    <div class="matrix-cell-white" id="m_10">14</div>
+                                    <div class="matrix-cell-white" id="m_10">-27</div>
                                     <div class="matrix-cell-white" id="m_11">21</div>
-                                    <div class="matrix-cell-white" id="m_12">-28</div>
+                                    <div class="matrix-cell-white" id="m_12">-45</div>
 
-                                    <div class="matrix-cell-white" id="m_20">26</div>
-                                    <div class="matrix-cell-white" id="m_21">-45</div>
+                                    <div class="matrix-cell-white" id="m_20">12</div>
+                                    <div class="matrix-cell-white" id="m_21">-28</div>
                                     <div class="matrix-cell-white" id="m_22">20</div>
                                 </div>
                             </div>
@@ -771,15 +766,15 @@
                             <div class="matrix-bracket matrix-bracket-emerald">
                                 <div class="matrix-grid g-3x3">
                                     <div class="matrix-cell-white" id="cm_00">-18</div>
-                                    <div class="matrix-cell-white" id="cm_01">-27</div>
-                                    <div class="matrix-cell-white" id="cm_02">12</div>
+                                    <div class="matrix-cell-white" id="cm_01">14</div>
+                                    <div class="matrix-cell-white" id="cm_02">26</div>
 
-                                    <div class="matrix-cell-white" id="cm_10">14</div>
+                                    <div class="matrix-cell-white" id="cm_10">-27</div>
                                     <div class="matrix-cell-white" id="cm_11">21</div>
-                                    <div class="matrix-cell-white" id="cm_12">-28</div>
+                                    <div class="matrix-cell-white" id="cm_12">-45</div>
 
-                                    <div class="matrix-cell-white" id="cm_20">26</div>
-                                    <div class="matrix-cell-white" id="cm_21">-45</div>
+                                    <div class="matrix-cell-white" id="cm_20">12</div>
+                                    <div class="matrix-cell-white" id="cm_21">-28</div>
                                     <div class="matrix-cell-white" id="cm_22">20</div>
                                 </div>
                             </div>
@@ -802,15 +797,15 @@
                             <div class="matrix-bracket matrix-bracket-emerald">
                                 <div class="matrix-grid g-3x3">
                                     <div class="matrix-cell-white" id="cof_00">-18</div>
-                                    <div class="matrix-cell-white" id="cof_01">27</div>
-                                    <div class="matrix-cell-white" id="cof_02">12</div>
+                                    <div class="matrix-cell-white" id="cof_01">-14</div>
+                                    <div class="matrix-cell-white" id="cof_02">26</div>
 
-                                    <div class="matrix-cell-white" id="cof_10">-14</div>
+                                    <div class="matrix-cell-white" id="cof_10">27</div>
                                     <div class="matrix-cell-white" id="cof_11">21</div>
-                                    <div class="matrix-cell-white" id="cof_12">28</div>
+                                    <div class="matrix-cell-white" id="cof_12">45</div>
 
-                                    <div class="matrix-cell-white" id="cof_20">26</div>
-                                    <div class="matrix-cell-white" id="cof_21">45</div>
+                                    <div class="matrix-cell-white" id="cof_20">12</div>
+                                    <div class="matrix-cell-white" id="cof_21">28</div>
                                     <div class="matrix-cell-white" id="cof_22">20</div>
                                 </div>
                             </div>
@@ -822,15 +817,15 @@
                                 <div class="matrix-bracket matrix-bracket-emerald">
                                     <div class="matrix-grid g-3x3">
                                         <div class="matrix-cell-white" id="adj_t00">-18</div>
-                                        <div class="matrix-cell-white" id="adj_t01">27</div>
-                                        <div class="matrix-cell-white" id="adj_t02">12</div>
+                                        <div class="matrix-cell-white" id="adj_t01">-14</div>
+                                        <div class="matrix-cell-white" id="adj_t02">26</div>
 
-                                        <div class="matrix-cell-white" id="adj_t10">-14</div>
+                                        <div class="matrix-cell-white" id="adj_t10">27</div>
                                         <div class="matrix-cell-white" id="adj_t11">21</div>
-                                        <div class="matrix-cell-white" id="adj_t12">28</div>
+                                        <div class="matrix-cell-white" id="adj_t12">45</div>
 
-                                        <div class="matrix-cell-white" id="adj_t20">26</div>
-                                        <div class="matrix-cell-white" id="adj_t21">45</div>
+                                        <div class="matrix-cell-white" id="adj_t20">12</div>
+                                        <div class="matrix-cell-white" id="adj_t21">28</div>
                                         <div class="matrix-cell-white" id="adj_t22">20</div>
                                     </div>
                                 </div>
@@ -840,15 +835,15 @@
                             <div class="matrix-bracket matrix-bracket-emerald bg-blue-100/60 p-1 rounded-xl">
                                 <div class="matrix-grid g-3x3">
                                     <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f00">-18</div>
-                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f01">-14</div>
-                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f02">26</div>
+                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f01">27</div>
+                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f02">12</div>
 
-                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f10">27</div>
+                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f10">-14</div>
                                     <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f11">21</div>
-                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f12">45</div>
+                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f12">28</div>
 
-                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f20">12</div>
-                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f21">28</div>
+                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f20">26</div>
+                                    <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f21">45</div>
                                     <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="adj_f22">20</div>
                                 </div>
                             </div>
@@ -873,15 +868,15 @@
                         <div class="matrix-bracket matrix-bracket-emerald bg-blue-100/50 p-1 rounded-xl">
                             <div class="matrix-grid g-3x3">
                                 <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj00">-18</div>
-                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj01">-14</div>
-                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj02">26</div>
+                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj01">27</div>
+                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj02">12</div>
 
-                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj10">27</div>
+                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj10">-14</div>
                                 <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj11">21</div>
-                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj12">45</div>
+                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj12">28</div>
 
-                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj20">12</div>
-                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj21">28</div>
+                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj20">26</div>
+                                <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj21">45</div>
                                 <div class="matrix-cell-white bg-blue-200 border-blue-900 text-blue-950" id="s4_adj22">20</div>
                             </div>
                         </div>
@@ -901,15 +896,15 @@
                             <div class="matrix-bracket matrix-bracket-emerald bg-blue-100/50 p-1 rounded-xl">
                                 <div class="matrix-grid g-3x3">
                                     <div class="matrix-cell-white" id="s5_adj00">-18</div>
-                                    <div class="matrix-cell-white" id="s5_adj01">-14</div>
-                                    <div class="matrix-cell-white" id="s5_adj02">26</div>
+                                    <div class="matrix-cell-white" id="s5_adj01">27</div>
+                                    <div class="matrix-cell-white" id="s5_adj02">12</div>
 
-                                    <div class="matrix-cell-white" id="s5_adj10">27</div>
+                                    <div class="matrix-cell-white" id="s5_adj10">-14</div>
                                     <div class="matrix-cell-white" id="s5_adj11">21</div>
-                                    <div class="matrix-cell-white" id="s5_adj12">45</div>
+                                    <div class="matrix-cell-white" id="s5_adj12">28</div>
 
-                                    <div class="matrix-cell-white" id="s5_adj20">12</div>
-                                    <div class="matrix-cell-white" id="s5_adj21">28</div>
+                                    <div class="matrix-cell-white" id="s5_adj20">26</div>
+                                    <div class="matrix-cell-white" id="s5_adj21">45</div>
                                     <div class="matrix-cell-white" id="s5_adj22">20</div>
                                 </div>
                             </div>
@@ -1025,6 +1020,7 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT AUTO-CALCULATION LOGIC -->
     <script>
         function getV(id) {
             let el = document.getElementById(id);
@@ -1038,6 +1034,7 @@
             if (el) el.innerText = val;
         }
 
+        /* 2x2 LOGIC */
         function solve2x2() {
             let a1 = getV('eq2_a1'), a2 = getV('eq2_a2');
             let b1 = getV('eq2_b1'), b2 = getV('eq2_b2');
@@ -1054,7 +1051,7 @@
             let det = (a1 * b2) - (b1 * a2);
             setT('s2_2_det', det);
 
-            // Step 3
+            // Step 3: Minor 2x2
             let m00 = b2, m01 = a2, m10 = b1, m11 = a1;
             setT('m2_00', m00); setT('m2_01', m01); setT('m2_10', m10); setT('m2_11', m11);
             setT('c2_m00', m00); setT('c2_m01', m01); setT('c2_m10', m10); setT('c2_m11', m11);
@@ -1092,44 +1089,50 @@
             setT('res2_y', Number(ansY));
         }
 
+        /* CORRECTED 3x3 LOGIC */
         function solveAll3x3() {
-            let a1 = getV('eq_a1'), a2 = getV('eq_a2'), a3 = getV('eq_a3');
-            let b1 = getV('eq_b1'), b2 = getV('eq_b2'), b3 = getV('eq_b3');
-            let c1 = getV('eq_c1'), c2 = getV('eq_c2'), c3 = getV('eq_c3');
+            // Read matrix elements by row:
+            // Row 1: r11, r12, r13
+            // Row 2: r21, r22, r23
+            // Row 3: r31, r32, r33
+            let r11 = getV('eq_a1'), r12 = getV('eq_b1'), r13 = getV('eq_c1');
+            let r21 = getV('eq_a2'), r22 = getV('eq_b2'), r23 = getV('eq_c2');
+            let r31 = getV('eq_a3'), r32 = getV('eq_b3'), r33 = getV('eq_c3');
 
             let d1 = getV('eq_d1'), d2 = getV('eq_d2'), d3 = getV('eq_d3');
 
-            // Step 1
-            setT('s1_a1', a1); setT('s1_a2', a2); setT('s1_a3', a3);
-            setT('s1_b1', b1); setT('s1_b2', b2); setT('s1_b3', b3);
-            setT('s1_c1', c1); setT('s1_c2', c2); setT('s1_c3', c3);
-            setT('s1_d1', d1); setT('s1_d2', d2); setT('s1_d3', d3);
+            // Step 1: Display Equation in Matrix Form
+            setT('s1_a1', r11); setT('s1_b1', r12); setT('s1_c1', r13);
+            setT('s1_a2', r21); setT('s1_b2', r22); setT('s1_c2', r23);
+            setT('s1_a3', r31); setT('s1_b3', r32); setT('s1_c3', r33);
+            setT('s1_d1', d1);  setT('s1_d2', d2);  setT('s1_d3', d3);
 
-            // Step 2
-            setT('s2_a1', a1); setT('s2_a2', a2); setT('s2_a3', a3);
-            setT('s2_b1', b1); setT('s2_b2', b2); setT('s2_b3', b3);
-            setT('s2_c1', c1); setT('s2_c2', c2); setT('s2_c3', c3);
+            // Step 2: Determinant A via Sarrus Rule
+            setT('s2_a1', r11); setT('s2_b1', r12); setT('s2_c1', r13);
+            setT('s2_a2', r21); setT('s2_b2', r22); setT('s2_c2', r23);
+            setT('s2_a3', r31); setT('s2_b3', r32); setT('s2_c3', r33);
 
-            setT('s2_a1_dup', a1); setT('s2_a2_dup', a2); setT('s2_a3_dup', a3);
-            setT('s2_b1_dup', b1); setT('s2_b2_dup', b2); setT('s2_b3_dup', b3);
+            setT('s2_a1_dup', r11); setT('s2_b1_dup', r12);
+            setT('s2_a2_dup', r21); setT('s2_b2_dup', r22);
+            setT('s2_a3_dup', r31); setT('s2_b3_dup', r32);
 
-            let pos = (a1 * b2 * c3) + (b1 * c2 * a3) + (c1 * a2 * b3);
-            let neg = (c1 * b2 * a3) + (a1 * c2 * b3) + (b1 * a2 * c3);
+            let pos = (r11 * r22 * r33) + (r12 * r23 * r31) + (r13 * r21 * r32);
+            let neg = (r13 * r22 * r31) + (r11 * r23 * r32) + (r12 * r21 * r33);
             let det = pos - neg;
             setT('s2_det', det);
 
-            // Step 3
-            let m00 = (b2 * c3) - (c2 * b3);
-            let m01 = (b1 * c3) - (c1 * b3);
-            let m02 = (b1 * c2) - (c1 * b2);
+            // Step 3: Correct Minor Calculation (Cross-Multiplication after deleting Row i & Col j)
+            let m00 = (r22 * r33) - (r23 * r32);
+            let m01 = (r21 * r33) - (r23 * r31);
+            let m02 = (r21 * r32) - (r22 * r31);
 
-            let m10 = (a2 * c3) - (c2 * a3);
-            let m11 = (a1 * c3) - (c1 * a3);
-            let m12 = (a1 * c2) - (c1 * a2);
+            let m10 = (r12 * r33) - (r13 * r32);
+            let m11 = (r11 * r33) - (r13 * r31);
+            let m12 = (r11 * r32) - (r12 * r31);
 
-            let m20 = (a2 * b3) - (b2 * a3);
-            let m21 = (a1 * b3) - (b1 * a3);
-            let m22 = (a1 * b2) - (b1 * a2);
+            let m20 = (r12 * r23) - (r13 * r22);
+            let m21 = (r11 * r23) - (r13 * r21);
+            let m22 = (r11 * r22) - (r12 * r21);
 
             setT('m_00', m00); setT('m_01', m01); setT('m_02', m02);
             setT('m_10', m10); setT('m_11', m11); setT('m_12', m12);
@@ -1139,9 +1142,10 @@
             setT('cm_10', m10); setT('cm_11', m11); setT('cm_12', m12);
             setT('cm_20', m20); setT('cm_21', m21); setT('cm_22', m22);
 
-            let cof00 = m00 * 1,  cof01 = m01 * -1, cof02 = m02 * 1;
-            let cof10 = m10 * -1, cof11 = m11 * 1,  cof12 = m12 * -1;
-            let cof20 = m20 * 1,  cof21 = m21 * -1, cof22 = m22 * 1;
+            // Cofactors C_ij = (-1)^(i+j) * M_ij
+            let cof00 =  m00, cof01 = -m01, cof02 =  m02;
+            let cof10 = -m10, cof11 =  m11, cof12 = -m12;
+            let cof20 =  m20, cof21 = -m21, cof22 =  m22;
 
             setT('cof_00', cof00); setT('cof_01', cof01); setT('cof_02', cof02);
             setT('cof_10', cof10); setT('cof_11', cof11); setT('cof_12', cof12);
@@ -1151,6 +1155,7 @@
             setT('adj_t10', cof10); setT('adj_t11', cof11); setT('adj_t12', cof12);
             setT('adj_t20', cof20); setT('adj_t21', cof21); setT('adj_t22', cof22);
 
+            // Adjoint is Transpose of Cofactor Matrix (adj = C^T)
             let adj00 = cof00, adj01 = cof10, adj02 = cof20;
             let adj10 = cof01, adj11 = cof11, adj12 = cof21;
             let adj20 = cof02, adj21 = cof12, adj22 = cof22;
@@ -1159,13 +1164,13 @@
             setT('adj_f10', adj10); setT('adj_f11', adj11); setT('adj_f12', adj12);
             setT('adj_f20', adj20); setT('adj_f21', adj21); setT('adj_f22', adj22);
 
-            // Step 4
+            // Step 4: Inverse Matrix A^-1 = (1 / |A|) * adj(A)
             setT('s4_det', det);
             setT('s4_adj00', adj00); setT('s4_adj01', adj01); setT('s4_adj02', adj02);
             setT('s4_adj10', adj10); setT('s4_adj11', adj11); setT('s4_adj12', adj12);
             setT('s4_adj20', adj20); setT('s4_adj21', adj21); setT('s4_adj22', adj22);
 
-            // Step 5
+            // Step 5: X = A^-1 * B
             setT('s5_det', det); setT('s5_det2', det);
             setT('s5_adj00', adj00); setT('s5_adj01', adj01); setT('s5_adj02', adj02);
             setT('s5_adj10', adj10); setT('s5_adj11', adj11); setT('s5_adj12', adj12);
