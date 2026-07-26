@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Penentu Matriks 3D (Determinant)</title>
+    <title>3D Matrix Determinant Calculator</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -77,13 +77,6 @@
             box-shadow: 0 12px 0 #059669, 0 18px 30px rgba(0,0,0,0.3);
         }
 
-        .poster-card-purple {
-            background: #fdf8e6;
-            border: 4px solid #a78bfa;
-            border-radius: 1.75rem;
-            box-shadow: 0 12px 0 #6d28d9, 0 18px 30px rgba(0,0,0,0.3);
-        }
-
         /* Poster Header Bars */
         .poster-header-blue {
             background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
@@ -97,12 +90,6 @@
             box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
         }
 
-        .poster-header-purple {
-            background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
-            border-bottom: 4px solid #4c1d95;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
-        }
-
         /* 3D Glossy Buttons */
         .btn-3d-blue {
             background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
@@ -111,6 +98,17 @@
             transition: all 0.1s ease;
         }
         .btn-3d-blue:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        .btn-3d-green {
+            background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+            border-bottom: 4px solid #047857;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        .btn-3d-green:active {
             transform: translateY(2px);
             border-bottom-width: 2px;
         }
@@ -128,20 +126,20 @@
             position: absolute;
             top: -3px;
             bottom: -3px;
-            width: 10px;
+            width: 8px;
             border: 3px solid #1d4ed8;
         }
 
         .matrix-bracket::before {
             left: 0;
             border-right: none;
-            border-radius: 8px 0 0 8px;
+            border-radius: 6px 0 0 6px;
         }
 
         .matrix-bracket::after {
             right: 0;
             border-left: none;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 6px 6px 0;
         }
 
         .matrix-bracket-green::before, .matrix-bracket-green::after {
@@ -267,9 +265,9 @@
             color: #ffffff;
             border: 2px solid #ffffff;
             border-radius: 12px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             font-weight: 800;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.5px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.15);
         }
@@ -290,93 +288,78 @@
 </head>
 <body class="pb-16 selection:bg-yellow-300 selection:text-slate-900">
 
-    <!-- Top Header Banner -->
-    <header class="max-w-6xl mx-auto pt-6 px-4">
-        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
-            <!-- Background Decorative Stars -->
-            <div class="absolute -top-3 -right-3 text-yellow-400 text-3xl opacity-30 pointer-events-none">
-                <i class="fa-solid fa-star"></i>
-            </div>
-
-            <!-- Left Logo & Branding -->
+    <!-- Top Header Banner (Expanded Container Width max-w-[1500px]) -->
+    <header class="max-w-[1500px] mx-auto pt-6 px-4">
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-4 sm:p-5 border-4 border-sky-200 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
             <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-gradient-to-tr from-blue-700 via-sky-500 to-sky-300 rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter">
+                <div class="w-14 h-14 bg-gradient-to-tr from-blue-700 via-sky-500 to-sky-300 rounded-2xl border-4 border-white shadow-xl flex items-center justify-center text-white font-black text-2xl tracking-tighter shrink-0">
                     [M]
                 </div>
                 <div>
                     <div class="flex flex-wrap items-center gap-2 mb-1">
                         <span class="bg-gradient-to-r from-red-600 to-rose-500 text-white text-[11px] font-black px-3 py-0.5 rounded-full shadow-sm tracking-widest uppercase">
-                            MODUL SESI 2026/2027
-                        </span>
-                        <span class="bg-sky-100 text-sky-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-sky-300 flex items-center gap-1">
-                            <i class="fa-brands fa-github text-slate-800"></i> GitHub Ready
+                            ENGINEERING MATHEMATICS
                         </span>
                     </div>
                     <h1 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight leading-tight font-display">
-                        HUB PEMBELAJARAN & KALKULATOR MATRIKS 3D
+                        MATRIX CALCULATOR HUB
                     </h1>
                 </div>
             </div>
 
-            <!-- Navigation Button -->
-            <div class="flex items-center gap-2">
+            <!-- Header Action Buttons (With Home Button) -->
+            <div class="flex items-center gap-2.5">
+                <a href="index.html" class="btn-3d-green px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2 no-underline">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
                 <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2.5 rounded-2xl text-white font-extrabold text-xs flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group"></i> 6 Modul Topik
+                    <i class="fa-solid fa-layer-group"></i> 6 Sub-modules
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 mt-6">
+    <!-- Main Content Area -->
+    <main class="max-w-[1500px] mx-auto px-4 mt-6">
+        <!-- Hero Banner -->
         <section class="relative bg-gradient-to-b from-sky-400 via-blue-500 to-blue-700 rounded-3xl p-6 sm:p-8 border-4 border-white shadow-2xl overflow-hidden mb-8 text-center">
-            <!-- Floating Icons -->
-            <div class="absolute top-3 left-6 text-yellow-300 text-3xl animate-bounce pointer-events-none drop-shadow-lg">
-                <i class="fa-solid fa-square-root-variable"></i>
-            </div>
-            <div class="absolute bottom-4 right-6 text-yellow-300 text-4xl animate-pulse pointer-events-none drop-shadow-lg">
-                <i class="fa-solid fa-table-cells"></i>
-            </div>
-
             <div class="relative z-10 max-w-3xl mx-auto">
-                <!-- Red Pill Badge -->
                 <div class="inline-block bg-gradient-to-r from-red-600 via-rose-500 to-red-600 text-white font-black text-xs sm:text-sm px-6 py-1.5 rounded-full border-2 border-white shadow-lg mb-3 tracking-widest uppercase">
-                    MODUL KALKULATOR MATRIKS LIVE
+                    LIVE CALCULATOR MODULE
                 </div>
 
-                <!-- 3D Extruded Big Title -->
-                <h2 class="text-2xl sm:text-4xl font-black font-display tracking-wide mb-2 text-3d-yellow uppercase">
+                <h2 class="text-2xl sm:text-4xl font-black font-display tracking-wide mb-1 text-3d-yellow uppercase">
                     FIND - DETERMINANT
                 </h2>
-                <h3 class="text-xl sm:text-2xl font-black font-display text-3d-white uppercase mb-4">
+                <h3 class="text-xl sm:text-2xl font-black font-display text-3d-white uppercase mb-3">
                     (2x2 & 3x3)
                 </h3>
 
-                <p class="text-white text-xs sm:text-sm font-semibold leading-relaxed bg-blue-950/40 p-3.5 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
-                    Masukkan sebarang nombor pada petak matriks bernombor <span class="bg-yellow-300 text-slate-900 font-extrabold px-1.5 py-0.5 rounded">kuning</span> di bawah. Pengiraan nilai penentu $|A|$ melalui **Method 1 (Minor Expansion)** dan **Method 2 (Sarrus Rule)** akan dikemas kini secara **langsung (*live*)**!
+                <p class="text-white text-xs sm:text-sm font-semibold leading-relaxed bg-blue-950/40 p-3 rounded-2xl border border-white/20 backdrop-blur-sm max-w-2xl mx-auto">
+                    Enter any values in the <span class="bg-yellow-300 text-slate-900 font-extrabold px-1.5 py-0.5 rounded">yellow</span> input cells below. The determinant $|A|$ calculations using **Method 1 (Minor Expansion)** and **Method 2 (Sarrus Rule)** will update in **real-time**!
                 </p>
             </div>
         </section>
 
-        <!-- SEKSYEN 1: METHOD 1 (EXPANSION / MINOR) -->
+        <!-- SECTION 1: METHOD 1 (EXPANSION / MINOR) -->
         <section class="poster-card-blue p-4 sm:p-6 mb-8">
-            <!-- Header Bar -->
-            <div class="poster-header-blue p-3.5 rounded-2xl text-white mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="poster-header-blue p-3 rounded-2xl text-white mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
                         1
                     </div>
                     <div>
                         <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
-                            METHOD 1: EXPANSION BY MINORS / COFACTORS
+                            1. METHOD 1: EXPANSION BY MINORS / COFACTORS
                         </h3>
                         <p class="text-[11px] text-sky-100 font-semibold" id="katex_formula_m1">Formula 2x2: $|A| = ad - bc$ | Formula 3x3: $|A| = a M_{11} - b M_{12} + c M_{13}$</p>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-8 overflow-x-auto pb-4">
+            <div class="space-y-6">
                 <!-- 1. DETERMINANT FOR (2x2) -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-sky-200 shadow-sm min-w-[780px]">
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-sky-200 shadow-sm">
                     <div class="label-tag inline-block mb-4">
                         DETERMINANT FOR : (2x2)
                     </div>
@@ -385,7 +368,7 @@
                         <span class="text-base font-serif italic text-blue-900">A</span>
                         <span class="text-lg font-black">=</span>
 
-                        <!-- Matriks Input 2x2 -->
+                        <!-- Matrix 2x2 Input -->
                         <div class="matrix-bracket">
                             <div class="matrix-grid g-2x2">
                                 <input type="number" id="m2_00" value="6" oninput="update2x2()">
@@ -408,12 +391,12 @@
                 </div>
 
                 <!-- 2. DETERMINANT FOR (3x3) - METHOD 1 -->
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-sky-200 shadow-sm min-w-[850px]">
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-sky-200 shadow-sm">
                     <div class="label-tag inline-block mb-4">
-                        DETERMINANT FOR : (3x3) [Kembangan Baris Pertama]
+                        DETERMINANT FOR : (3x3) [First Row Expansion]
                     </div>
 
-                    <!-- Input Matriks A 3x3 -->
+                    <!-- Input Matrix A 3x3 -->
                     <div class="flex items-center gap-3 mb-6">
                         <span class="text-base font-serif italic text-blue-900 font-black">A</span>
                         <span class="text-lg font-black">=</span>
@@ -507,40 +490,39 @@
             </div>
         </section>
 
-        <!-- SEKSYEN 2: METHOD 2 (PETUA SARRUS) -->
+        <!-- SECTION 2: METHOD 2 (SARRUS RULE) -->
         <section class="poster-card-green p-4 sm:p-6 mb-8">
-            <!-- Header Bar -->
-            <div class="poster-header-green p-3.5 rounded-2xl text-white mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="poster-header-green p-3 rounded-2xl text-white mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-yellow-400 text-slate-900 rounded-xl flex items-center justify-center font-black text-lg shadow-md border-2 border-white">
                         2
                     </div>
                     <div>
                         <h3 class="font-black text-base sm:text-lg tracking-wide uppercase font-display">
-                            METHOD 2: PETUA SARRUS / DIAGRAM DIAGONAL
+                            2. METHOD 2: SARRUS RULE / DIAGONAL DIAGRAM
                         </h3>
                         <p class="text-[11px] text-emerald-100 font-semibold" id="katex_formula_m2">Formula: $|A| = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})$</p>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-8 overflow-x-auto pb-4">
-                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm min-w-[850px]">
+            <div class="space-y-6">
+                <div class="bg-white/80 p-5 rounded-2xl border-2 border-emerald-200 shadow-sm">
                     <div class="label-tag flex-shrink-0 inline-block mb-4">
-                        DETERMINANT FOR : (3x3) [Penambahan 2 Kolum Pertama]
+                        DETERMINANT FOR : (3x3) [Appended First 2 Columns]
                     </div>
 
-                    <!-- Input Matriks Utama 3x3 dengan Kolum Salinan Auto -->
+                    <!-- Input Matrix 3x3 with Duplicated Columns -->
                     <div class="flex items-center gap-3 mb-6">
                         <span class="text-base font-serif italic text-blue-900 font-black">A</span>
                         <span class="text-lg font-black">=</span>
                         <div class="matrix-bracket matrix-bracket-green">
                             <div class="matrix-grid g-3x5">
-                                <!-- 3x3 Input Original (Kuning) -->
+                                <!-- 3x3 Input Original (Yellow) -->
                                 <input type="number" id="m32_00" value="2" oninput="update3x3_Method2()">
                                 <input type="number" id="m32_01" value="-4" oninput="update3x3_Method2()">
                                 <input type="number" id="m32_02" value="9" oninput="update3x3_Method2()">
-                                <!-- Duplicated Col 1 & 2 (Putih) -->
+                                <!-- Duplicated Col 1 & 2 (White) -->
                                 <div class="matrix-cell-white" id="dup1_00">2</div>
                                 <div class="matrix-cell-white" id="dup1_01">-4</div>
 
@@ -563,7 +545,7 @@
                     <div class="flex flex-wrap items-center gap-6 mb-6 bg-emerald-50/80 p-4 rounded-xl border border-emerald-200">
                         <span class="text-blue-900 font-black text-sm">|A| =</span>
 
-                        <!-- Diagram 1 (Diagonal Kanan / Utamakan) -->
+                        <!-- Diagram 1 (Right Diagonal / Downward) -->
                         <div class="diagram-container">
                             <div class="matrix-bracket matrix-bracket-green bg-white rounded-xl">
                                 <div class="matrix-grid g-3x5">
@@ -600,7 +582,7 @@
 
                         <span class="text-2xl font-black text-rose-600">-</span>
 
-                        <!-- Diagram 2 (Diagonal Kiri) -->
+                        <!-- Diagram 2 (Left Diagonal / Upward) -->
                         <div class="diagram-container">
                             <div class="matrix-bracket matrix-bracket-green bg-white rounded-xl">
                                 <div class="matrix-grid g-3x5">
@@ -660,12 +642,12 @@
         </section>
     </main>
 
-    <!-- Topic Drawer Modal -->
+    <!-- Sub-modules Drawer Modal -->
     <div id="topicsDrawer" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
         <div class="bg-white border-4 border-sky-300 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-3">
             <div class="flex items-center justify-between border-b pb-3">
                 <h3 class="text-lg font-black text-slate-800 flex items-center gap-2 font-display">
-                    <i class="fa-solid fa-list-check text-blue-600"></i> Senarai 6 Modul Utama
+                    <i class="fa-solid fa-list-check text-blue-600"></i> Six Sub-modules
                 </h3>
                 <button onclick="toggleTopicsDrawer()" class="text-slate-400 hover:text-slate-600 font-bold">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -674,32 +656,32 @@
             <div class="space-y-2 text-xs font-semibold">
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
                     <span>1. Basic Operation (Addition & Subtraction)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 1</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 1</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
                     <span>2. Basic Operation (Multiplication)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 2</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 2</span>
                 </div>
                 <div class="p-3 bg-sky-100 border-2 border-sky-400 rounded-xl flex items-center justify-between font-bold text-sky-900">
-                    <span>3. Find - Determinant (2x2 & 3x3)</span>
-                    <span class="bg-sky-500 text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Sedang Dibuka</span>
+                    <span>3. Determinant</span>
+                    <span class="bg-sky-500 text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Active</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
-                    <span>4. Find - Minor, Cofactor & Adjoint</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 4</span>
+                    <span>4. Matrix Analysis</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 4</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
-                    <span>5. Inverse Method - (2x2) & (3x3)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 5</span>
+                    <span>5. Inverse Matrix</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 5</span>
                 </div>
                 <div class="p-3 bg-slate-50 border rounded-xl flex items-center justify-between text-slate-700 opacity-75">
-                    <span>6. Cramer's Method - (2x2) & (3x3)</span>
-                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Topik 6</span>
+                    <span>6. Cramer's Rule</span>
+                    <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded">Module 6</span>
                 </div>
             </div>
             <div class="pt-2 text-right">
                 <button onclick="toggleTopicsDrawer()" class="btn-3d-blue px-4 py-2 rounded-xl text-white font-bold text-xs">
-                    Tutup
+                    Close
                 </button>
             </div>
         </div>
@@ -829,7 +811,7 @@
             // Render KaTeX Math Formulas
             if (window.katex) {
                 try {
-                    katex.render("|A| = ad - bc \\quad \\text{dan} \\quad |A| = a M_{11} - b M_{12} + c M_{13}", document.getElementById('katex_formula_m1'));
+                    katex.render("|A| = ad - bc \\quad \\text{and} \\quad |A| = a M_{11} - b M_{12} + c M_{13}", document.getElementById('katex_formula_m1'));
                     katex.render("|A| = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})", document.getElementById('katex_formula_m2'));
                 } catch(e) {}
             }
